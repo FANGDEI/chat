@@ -10,7 +10,7 @@ func (m *Manager) GetUserInfo(ctx context.Context, request *service.GetUserInfoR
 	m.logger.Info("User service, GetUserInfo service")
 	userInfo, err := m.localer.GetUserInfoWithUuid(request.Uuid)
 	if err != nil {
-		return nil, errno.ErrDatabase
+		return nil, errno.ServerErr(errno.ErrDatabase, err.Error())
 	}
 	return &service.GetUserInfoResponse{
 		User: &service.SimpleUser{

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option go_package = "./internal/app/service;service";
+
+package service;
+
+message Error {
+  int32 code = 1;
+  string msg = 2;
+}

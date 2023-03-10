@@ -58,7 +58,7 @@ func (m *Manager) UpdateUserInfoWithID(id int64, u SimpleUser) error {
 }
 
 func (m *Manager) UpdateUserInfoWithUuid(uuid string, u SimpleUser) error {
-	return m.handler.Table(user).Where("uuid = ?", uuid).Omit("id", "uuid", "name").Updates(&u).Error
+	return m.handler.Table(user).Where("uuid = ?", uuid).Omit("id", "uuid", "name", "email").Updates(&u).Error
 }
 
 func (m *Manager) UpdateUserPasswordWithID(id int64, password string) error {

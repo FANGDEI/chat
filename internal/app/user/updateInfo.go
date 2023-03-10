@@ -13,11 +13,10 @@ func (m *Manager) UpdateUserInfo(ctx context.Context, request *service.UpdateUse
 		NickName:  request.User.Nickname,
 		Gender:    request.User.Gender,
 		Avatar:    request.User.Avatar,
-		Email:     request.User.Email,
 		Signature: request.User.Signature,
 	})
 	if err != nil {
-		return nil, errno.ErrDatabase
+		return nil, errno.ServerErr(errno.ErrDatabase, err.Error())
 	}
 	return &service.Response{}, nil
 }

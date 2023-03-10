@@ -10,11 +10,11 @@ import (
 func (m *Manager) RouteUser() {
 	m.handler.PartyFunc("/user", func(p iris.Party) {
 		p.Get("/email/{email}", m.getEmail)
+		p.Get("/info", m.tokener.Serve(), m.getUserInfo)
 		p.Post("/register", m.register)
 		p.Post("/login", m.login)
-		p.Post("/info", m.getUserInfo)
-		p.Post("/update", m.updateInfo)
-		p.Post("/change/password", m.changePwd)
+		p.Post("/update", m.tokener.Serve(), m.updateInfo)
+		p.Post("/change/password", m.tokener.Serve(), m.changePwd)
 	})
 }
 
@@ -102,16 +102,17 @@ func (m *Manager) login(ctx iris.Context) {
 	})
 }
 
-type getUserInfoMessage struct {
-	Uuid string `json:"uuid"`
-}
+//type getUserInfoMessage struct {
+//	Uuid string `json:"uuid"`
+//}
 
 func (m *Manager) getUserInfo(ctx iris.Context) {
-	var msg getUserInfoMessage
-	if err := ctx.ReadJSON(&msg); err != nil {
-		m.sendSimpleMessage(ctx, iris.StatusBadRequest, err)
-		return
-	}
+	//var msg getUserInfoMessage
+	//if err := ctx.ReadJSON(&msg); err != nil {
+	//	m.sendSimpleMessage(ctx, iris.StatusBadRequest, err)
+	//	return
+	//}
+	uuid := m.tokener.GetUUID(ctx)
 	conn, err := center.Resolver("user")
 	if err != nil {
 		m.sendSimpleMessage(ctx, iris.StatusInternalServerError)
@@ -120,7 +121,7 @@ func (m *Manager) getUserInfo(ctx iris.Context) {
 	c := service.NewUserServiceClient(conn)
 
 	response, err := c.GetUserInfo(context.Background(), &service.GetUserInfoRequest{
-		Uuid: msg.Uuid,
+		Uuid: uuid,
 	})
 	if err != nil {
 		m.sendErrorMessage(ctx, err)
@@ -132,15 +133,14 @@ func (m *Manager) getUserInfo(ctx iris.Context) {
 }
 
 type updateInfoMessage struct {
-	Uuid      string `json:"uuid"`
 	NickName  string `json:"nick_name"`
 	Gender    string `json:"gender"`
 	Avatar    string `json:"avatar"`
-	Email     string `json:"email"`
 	Signature string `json:"signature"`
 }
 
 func (m *Manager) updateInfo(ctx iris.Context) {
+	uuid := m.tokener.GetUUID(ctx)
 	var msg updateInfoMessage
 	if err := ctx.ReadJSON(&msg); err != nil {
 		m.sendSimpleMessage(ctx, iris.StatusBadRequest, err)
@@ -154,12 +154,11 @@ func (m *Manager) updateInfo(ctx iris.Context) {
 	c := service.NewUserServiceClient(conn)
 
 	_, err = c.UpdateUserInfo(context.Background(), &service.UpdateUserInfoRequest{
-		Uuid: msg.Uuid,
+		Uuid: uuid,
 		User: &service.SimpleUser{
 			Nickname:  msg.NickName,
 			Gender:    msg.Gender,
 			Avatar:    msg.Avatar,
-			Email:     msg.Email,
 			Signature: msg.Signature,
 		},
 	})
@@ -171,12 +170,12 @@ func (m *Manager) updateInfo(ctx iris.Context) {
 }
 
 type changePwdMessage struct {
-	Uuid   string `json:"uuid"`
 	OldPwd string `json:"old_pwd"`
 	NewPwd string `json:"new_pwd"`
 }
 
 func (m *Manager) changePwd(ctx iris.Context) {
+	uuid := m.tokener.GetUUID(ctx)
 	var msg changePwdMessage
 	if err := ctx.ReadJSON(&msg); err != nil {
 		m.sendSimpleMessage(ctx, iris.StatusBadRequest, err)
@@ -190,7 +189,7 @@ func (m *Manager) changePwd(ctx iris.Context) {
 	c := service.NewUserServiceClient(conn)
 
 	_, err = c.ChangePassword(context.Background(), &service.UserChangePasswordRequest{
-		Uuid:   msg.Uuid,
+		Uuid:   uuid,
 		OldPwd: msg.OldPwd,
 		NewPwd: msg.NewPwd,
 	})

@@ -45,7 +45,7 @@ func (m *Manager) sendEmail(info Information) {
 	content := gomail.NewMessage()
 	content.SetAddressHeader("From", C.Account, C.Name)
 	content.SetHeader("To", info.To)
-	content.SetHeader("Subject", "[回声实验室]身份认证邮件")
+	content.SetHeader("Subject", "[CHAT]身份认证邮件")
 	content.SetBody("text/html", fmt.Sprintf("您的验证码是：%s", info.Code))
 	err := m.handler.DialAndSend(content)
 	if err != nil {

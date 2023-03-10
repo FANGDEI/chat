@@ -49,11 +49,15 @@ func (m *Manager) NewToken(id int64, uuid string) (tokenString string, err error
 	return
 }
 
-func (m *Manager) getID(ctx iris.Context) int64 {
+func (m *Manager) Serve() func(ctx iris.Context) {
+	return m.tokener.Serve
+}
+
+func (m *Manager) GetID(ctx iris.Context) int64 {
 	return int64(ctx.Values().Get("jwt").(*jwt.Token).Claims.(jwt.MapClaims)["id"].(float64))
 }
 
-func (m *Manager) getUUID(ctx iris.Context) string {
+func (m *Manager) GetUUID(ctx iris.Context) string {
 	return ctx.Values().Get("jwt").(*jwt.Token).Claims.(jwt.MapClaims)["uuid"].(string)
 }
 

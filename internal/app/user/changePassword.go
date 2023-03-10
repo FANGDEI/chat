@@ -11,14 +11,14 @@ func (m *Manager) ChangePassword(ctx context.Context, request *service.UserChang
 	uuid, oldPwd, newPwd := request.Uuid, request.OldPwd, request.NewPwd
 	user, err := m.localer.GetUserInformationWithUuid(uuid)
 	if err != nil {
-		return nil, errno.ErrDatabase
+		return nil, errno.ServerErr(errno.ErrDatabase, err.Error())
 	}
 	if user.Password != m.cryptoer.ToMd5(oldPwd) {
-		return nil, errno.ErrUserOldPassword
+		return nil, errno.ServerErr(errno.ErrUserOldPassword, "old password not equal")
 	}
-	err = m.localer.UpdateUserPasswordWithUuid(uuid, newPwd)
+	err = m.localer.UpdateUserPasswordWithUuid(uuid, m.cryptoer.ToMd5(newPwd))
 	if err != nil {
-		return nil, errno.ErrDatabase
+		return nil, errno.ServerErr(errno.ErrDatabase, err.Error())
 	}
 	return &service.Response{}, nil
 }
