@@ -127,9 +127,10 @@ func (m *Manager) getUserInfo(ctx iris.Context) {
 		m.sendErrorMessage(ctx, err)
 		return
 	}
-	m.sendJson(ctx, iris.StatusOK, map[string]any{
-		"data": response.User,
-	})
+	//m.sendJson(ctx, iris.StatusOK, map[string]any{
+	//	"data": response.User,
+	//})
+	m.sendGRPCMessage(ctx, iris.StatusOK, response, service.GetUserInfoResponse{})
 }
 
 type updateInfoMessage struct {

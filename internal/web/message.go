@@ -1,8 +1,12 @@
 package web
 
 import (
+	"bytes"
 	"chat/internal/pkg/errno"
+	"encoding/json"
 	"fmt"
+	"github.com/golang/protobuf/jsonpb"
+	"github.com/golang/protobuf/proto"
 	"github.com/kataras/iris/v12"
 	"net/http"
 )
@@ -69,4 +73,21 @@ func (m *Manager) sendErrorMessage(ctx iris.Context, err error) {
 		responseCode = http.StatusInternalServerError
 	}
 	m.sendSimpleMessage(ctx, responseCode, err)
+}
+
+func (m *Manager) sendGRPCMessage(ctx iris.Context, code int, msg proto.Message, data any) {
+	jsonpbMarshaler := &jsonpb.Marshaler{
+		EmitDefaults: true, // 是否将字段值为空的渲染到JSON结构中
+		OrigName:     true, // 是否使用原生的proto协议中的字段
+	}
+	var buffer bytes.Buffer
+	if err := jsonpbMarshaler.Marshal(&buffer, msg); err != nil {
+		panic(err)
+	}
+	if err := json.Unmarshal(buffer.Bytes(), &data); err != nil {
+		panic(err)
+	}
+	m.sendJson(ctx, code, map[string]any{
+		"data": data,
+	})
 }
