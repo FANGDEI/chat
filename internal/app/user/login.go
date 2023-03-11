@@ -9,7 +9,7 @@ import (
 
 func (m *Manager) Login(ctx context.Context, request *service.UserLoginRequest) (*service.UserLoginResponse, error) {
 	m.logger.Info("User service, Login service")
-	user, err := m.localer.GetUserInfoWithName(request.Name)
+	user, err := m.localer.GetUserInformationWithName(request.Name)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, errno.ServerErr(errno.ErrUserNotFound, err.Error())

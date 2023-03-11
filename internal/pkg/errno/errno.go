@@ -10,16 +10,9 @@ var (
 
 	InternalServerError = &Errno{Code: 10001, Msg: "Internal server error"}
 
-	// token
 	ErrTokenGenerate = &Errno{Code: 10002, Msg: "Token generate error"}
-
-	// MySQL
-	ErrDatabase = &Errno{Code: 10003, Msg: "Database error"}
-
-	// Redis
-	ErrRedis = &Errno{Code: 10101, Msg: "Redis error"}
-
-	ErrBadRequest = &Errno{Code: 20001, Msg: "Request error"}
+	ErrDatabase      = &Errno{Code: 10003, Msg: "Database error"}
+	ErrRedis         = &Errno{Code: 10101, Msg: "Redis error"}
 
 	// Email
 	ErrEmailFormat = &Errno{Code: 20101, Msg: "Email format error"}
@@ -33,4 +26,8 @@ var (
 	ErrUserNotFound       = &Errno{Code: 20204, Msg: "User not found"}
 	ErrUserPassword       = &Errno{Code: 20205, Msg: "User name or password is wrong"}
 	ErrUserOldPassword    = &Errno{Code: 20206, Msg: "User old password is wrong"}
+
+	// Friend
+	ErrFriendExists    = &Errno{Code: 20301, Msg: "Friend already exists"}
+	ErrFriendNotExists = &Errno{Code: 20302, Msg: "Friend not friend"}
 )

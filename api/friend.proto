@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option go_package = "./internal/app/service;service";
+
+package service;
+
+import "api/common.proto";
+
+message AddFriendRequest {
+  string uuid = 1;
+  string friend_name = 2;
+}
+
+message DelFriendRequest {
+  string uuid = 1;
+  string friend_name = 2;
+}
+
+service FriendService {
+  rpc AddFriend(AddFriendRequest) returns (Response) {}
+  rpc DelFriend(DelFriendRequest) returns (Response) {}
+}

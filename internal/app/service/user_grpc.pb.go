@@ -24,6 +24,8 @@ type UserServiceClient interface {
 	GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
 	ChangePassword(ctx context.Context, in *UserChangePasswordRequest, opts ...grpc.CallOption) (*Response, error)
 	UpdateUserInfo(ctx context.Context, in *UpdateUserInfoRequest, opts ...grpc.CallOption) (*Response, error)
+	GetUserList(ctx context.Context, in *GetUserListRequest, opts ...grpc.CallOption) (*GetUserListResponse, error)
+	GetOtherUserInfo(ctx context.Context, in *GetOtherUserInfoRequest, opts ...grpc.CallOption) (*GetOtherUserInfoResponse, error)
 }
 
 type userServiceClient struct {
@@ -88,6 +90,24 @@ func (c *userServiceClient) UpdateUserInfo(ctx context.Context, in *UpdateUserIn
 	return out, nil
 }
 
+func (c *userServiceClient) GetUserList(ctx context.Context, in *GetUserListRequest, opts ...grpc.CallOption) (*GetUserListResponse, error) {
+	out := new(GetUserListResponse)
+	err := c.cc.Invoke(ctx, "/service.UserService/GetUserList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetOtherUserInfo(ctx context.Context, in *GetOtherUserInfoRequest, opts ...grpc.CallOption) (*GetOtherUserInfoResponse, error) {
+	out := new(GetOtherUserInfoResponse)
+	err := c.cc.Invoke(ctx, "/service.UserService/GetOtherUserInfo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -98,6 +118,8 @@ type UserServiceServer interface {
 	GetUserInfo(context.Context, *GetUserInfoRequest) (*GetUserInfoResponse, error)
 	ChangePassword(context.Context, *UserChangePasswordRequest) (*Response, error)
 	UpdateUserInfo(context.Context, *UpdateUserInfoRequest) (*Response, error)
+	GetUserList(context.Context, *GetUserListRequest) (*GetUserListResponse, error)
+	GetOtherUserInfo(context.Context, *GetOtherUserInfoRequest) (*GetOtherUserInfoResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -122,6 +144,12 @@ func (UnimplementedUserServiceServer) ChangePassword(context.Context, *UserChang
 }
 func (UnimplementedUserServiceServer) UpdateUserInfo(context.Context, *UpdateUserInfoRequest) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserInfo not implemented")
+}
+func (UnimplementedUserServiceServer) GetUserList(context.Context, *GetUserListRequest) (*GetUserListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserList not implemented")
+}
+func (UnimplementedUserServiceServer) GetOtherUserInfo(context.Context, *GetOtherUserInfoRequest) (*GetOtherUserInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOtherUserInfo not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -244,6 +272,42 @@ func _UserService_UpdateUserInfo_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetUserList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetUserList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/service.UserService/GetUserList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetUserList(ctx, req.(*GetUserListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetOtherUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOtherUserInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetOtherUserInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/service.UserService/GetOtherUserInfo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetOtherUserInfo(ctx, req.(*GetOtherUserInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -274,6 +338,14 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateUserInfo",
 			Handler:    _UserService_UpdateUserInfo_Handler,
+		},
+		{
+			MethodName: "GetUserList",
+			Handler:    _UserService_GetUserList_Handler,
+		},
+		{
+			MethodName: "GetOtherUserInfo",
+			Handler:    _UserService_GetOtherUserInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

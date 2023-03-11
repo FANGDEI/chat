@@ -41,7 +41,30 @@ func (m *Manager) GetUserInfoWithUuid(uuid string) (SimpleUser, error) {
 	return u, err
 }
 
-func (m *Manager) GetUserInfoWithName(name string) (User, error) {
+func (m *Manager) GetUserInfoWithName(name string) (SimpleUser, error) {
+	var u SimpleUser
+	err := m.handler.Table(user).Where("name = ?", name).Take(&u).Error
+	return u, err
+}
+
+//func (m *Manager) GetUserListWithUuid(uuid string) ([]SimpleUser, error) {
+//	queryUser, err := m.GetUserInfoWithUuid(uuid)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	var us []SimpleUser
+//	err = m.handler.Table(user).Raw("select u.id, u.uuid, u.name, u.nick_name, u.gender, u.avatar, u.email, u.signature from friend as f join user as u on f.friend_id = u.id where f.user_id = ?", queryUser.ID).Scan(&us).Error
+//	return us, err
+//}
+
+func (m *Manager) GetUserListWithID(id int64) ([]SimpleUser, error) {
+	var us []SimpleUser
+	err := m.handler.Table(user).Raw("select u.id, u.uuid, u.name, u.nick_name, u.gender, u.avatar, u.email, u.signature from friend as f join user as u on f.friend_id = u.id where f.user_id = ?", id).Scan(&us).Error
+	return us, err
+}
+
+func (m *Manager) GetUserInformationWithName(name string) (User, error) {
 	var u User
 	err := m.handler.Table(user).Where("name = ?", name).Take(&u).Error
 	return u, err

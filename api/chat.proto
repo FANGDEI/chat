@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+option go_package = "./internal/app/service;service";
+
+package service;
+
+import "api/common.proto";
+
+message SendRequest {
+  string from = 1;
+  string to = 2;
+  string content = 3;
+  int64 message_type = 4;
+  int64 content_type = 5;
+  string time = 6;
+}
+
+message GetRequest {
+  string uuid = 1;
+}
+
+message Message {
+  string from = 1;
+  string content = 3;
+  int64 message_type = 4;
+  int64 content_type = 5;
+  string time = 6;
+}
+
+message GetResponse {
+  repeated Message msg = 1;
+}
+
+service MsgService {
+  rpc Send(SendRequest) returns (Response) {}
+  rpc Get(GetRequest) returns (GetResponse) {}
+}
