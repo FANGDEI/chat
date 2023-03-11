@@ -21,6 +21,7 @@ message GetRequest {
 
 message Message {
   string from = 1;
+  string group = 2;
   string content = 3;
   int64 message_type = 4;
   int64 content_type = 5;
