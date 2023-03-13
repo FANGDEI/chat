@@ -5,7 +5,7 @@ import (
 	"chat/internal/pkg/auther"
 	"chat/internal/pkg/cacher"
 	"chat/internal/pkg/cryptoer"
-	"chat/internal/pkg/email"
+	"chat/internal/pkg/emailer"
 	"chat/internal/pkg/localer"
 	"chat/internal/pkg/logger"
 )
@@ -16,7 +16,7 @@ type Manager struct {
 	cacher   *cacher.Manager
 	logger   *logger.Manager
 	cryptoer *cryptoer.Manager
-	emailer  *email.Manager
+	emailer  *emailer.Manager
 	tokener  *auther.Manager
 }
 
@@ -26,7 +26,7 @@ func New() *Manager {
 		cacher:   cacher.GetDefaultCacherManager(),
 		logger:   logger.GetDefaultLoggerManager(),
 		cryptoer: cryptoer.GetDefaultCryptoerManager(),
-		emailer:  email.GetDefaultEmailerManager(),
+		emailer:  emailer.GetDefaultEmailerManager(),
 		tokener:  auther.GetDefaultTokenerManager(),
 	}
 }
