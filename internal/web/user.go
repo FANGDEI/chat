@@ -2,7 +2,6 @@ package web
 
 import (
 	"chat/internal/app/service"
-	"chat/internal/pkg/center"
 	"context"
 	"github.com/kataras/iris/v12"
 )
@@ -20,14 +19,7 @@ func (m *Manager) RouteUser() {
 
 func (m *Manager) getEmail(ctx iris.Context) {
 	email := ctx.Params().Get("email")
-	conn, err := center.Resolver("user")
-	if err != nil {
-		m.sendSimpleMessage(ctx, iris.StatusInternalServerError)
-		return
-	}
-	c := service.NewUserServiceClient(conn)
-
-	_, err = c.Code(context.Background(), &service.CodeRequest{
+	_, err := userClient.Code(context.Background(), &service.CodeRequest{
 		Email: email,
 	})
 	if err != nil {
@@ -50,14 +42,7 @@ func (m *Manager) register(ctx iris.Context) {
 		m.sendSimpleMessage(ctx, iris.StatusBadRequest, err)
 		return
 	}
-	conn, err := center.Resolver("user")
-	if err != nil {
-		m.sendSimpleMessage(ctx, iris.StatusInternalServerError)
-		return
-	}
-	c := service.NewUserServiceClient(conn)
-
-	_, err = c.Register(context.Background(), &service.UserRegisterRequest{
+	_, err := userClient.Register(context.Background(), &service.UserRegisterRequest{
 		Name:     msg.Name,
 		Password: msg.Password,
 		Email:    msg.Email,
@@ -81,14 +66,7 @@ func (m *Manager) login(ctx iris.Context) {
 		m.sendSimpleMessage(ctx, iris.StatusBadRequest, err)
 		return
 	}
-	conn, err := center.Resolver("user")
-	if err != nil {
-		m.sendSimpleMessage(ctx, iris.StatusInternalServerError)
-		return
-	}
-	c := service.NewUserServiceClient(conn)
-
-	response, err := c.Login(context.Background(), &service.UserLoginRequest{
+	response, err := userClient.Login(context.Background(), &service.UserLoginRequest{
 		Name:     msg.Name,
 		Password: msg.Password,
 	})
@@ -113,14 +91,7 @@ func (m *Manager) getUserInfo(ctx iris.Context) {
 	//	return
 	//}
 	uuid := m.tokener.GetUUID(ctx)
-	conn, err := center.Resolver("user")
-	if err != nil {
-		m.sendSimpleMessage(ctx, iris.StatusInternalServerError)
-		return
-	}
-	c := service.NewUserServiceClient(conn)
-
-	response, err := c.GetUserInfo(context.Background(), &service.GetUserInfoRequest{
+	response, err := userClient.GetUserInfo(context.Background(), &service.GetUserInfoRequest{
 		Uuid: uuid,
 	})
 	if err != nil {
@@ -147,14 +118,7 @@ func (m *Manager) updateInfo(ctx iris.Context) {
 		m.sendSimpleMessage(ctx, iris.StatusBadRequest, err)
 		return
 	}
-	conn, err := center.Resolver("user")
-	if err != nil {
-		m.sendSimpleMessage(ctx, iris.StatusInternalServerError)
-		return
-	}
-	c := service.NewUserServiceClient(conn)
-
-	_, err = c.UpdateUserInfo(context.Background(), &service.UpdateUserInfoRequest{
+	_, err := userClient.UpdateUserInfo(context.Background(), &service.UpdateUserInfoRequest{
 		Uuid: uuid,
 		User: &service.SimpleUser{
 			Nickname:  msg.NickName,
@@ -182,14 +146,7 @@ func (m *Manager) changePwd(ctx iris.Context) {
 		m.sendSimpleMessage(ctx, iris.StatusBadRequest, err)
 		return
 	}
-	conn, err := center.Resolver("user")
-	if err != nil {
-		m.sendSimpleMessage(ctx, iris.StatusInternalServerError)
-		return
-	}
-	c := service.NewUserServiceClient(conn)
-
-	_, err = c.ChangePassword(context.Background(), &service.UserChangePasswordRequest{
+	_, err := userClient.ChangePassword(context.Background(), &service.UserChangePasswordRequest{
 		Uuid:   uuid,
 		OldPwd: msg.OldPwd,
 		NewPwd: msg.NewPwd,
