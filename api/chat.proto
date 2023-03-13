@@ -7,8 +7,8 @@ package service;
 import "api/common.proto";
 
 message SendRequest {
-  string from = 1;
-  string to = 2;
+  string from = 1; // uuid
+  string to = 2; // uuid
   string content = 3;
   int64 message_type = 4;
   int64 content_type = 5;
@@ -19,20 +19,20 @@ message GetRequest {
   string uuid = 1;
 }
 
-message Message {
-  string from = 1;
-  string group = 2;
-  string content = 3;
-  int64 message_type = 4;
-  int64 content_type = 5;
-  string time = 6;
-}
+//message Message {
+//  string from = 1;
+//  string group = 2;
+//  string content = 3;
+//  int64 message_type = 4;
+//  int64 content_type = 5;
+//  string time = 6;
+//}
 
 message GetResponse {
-  repeated Message msg = 1;
+  repeated string msg = 1;
 }
 
-service MsgService {
+service ChatService {
   rpc Send(SendRequest) returns (Response) {}
   rpc Get(GetRequest) returns (GetResponse) {}
 }
