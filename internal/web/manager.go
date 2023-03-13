@@ -10,6 +10,8 @@ import (
 	"strings"
 )
 
+var defaultLogger = logger.GetDefaultLoggerManager()
+
 type Manager struct {
 	handler *iris.Application
 	logger  *logger.Manager
