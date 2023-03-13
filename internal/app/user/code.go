@@ -2,7 +2,7 @@ package user
 
 import (
 	"chat/internal/app/service"
-	"chat/internal/pkg/email"
+	"chat/internal/pkg/emailer"
 	"chat/internal/pkg/errno"
 	"context"
 	"fmt"
@@ -26,7 +26,7 @@ func (m *Manager) Code(ctx context.Context, request *service.CodeRequest) (*serv
 	if err != nil {
 		return nil, errno.ServerErr(errno.ErrRedis, err.Error())
 	}
-	m.emailer.SendEmail(email.Information{
+	m.emailer.SendEmail(emailer.Information{
 		To:   request.Email,
 		Code: code,
 	})
