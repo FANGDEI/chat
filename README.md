@@ -11,7 +11,7 @@
 * 服务注册与配置中心consul
 * 部署使用Makefile以及Dockerfile
 ## 目录结构
-```go
+```FILE
 .
 ├── api ------------> 模块PROTO
 ├── cmd ------------> 模块及网关main文件
