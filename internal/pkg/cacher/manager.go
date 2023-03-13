@@ -17,6 +17,15 @@ func init() {
 
 var defaultCacherManager *Manager
 
+type Message struct {
+	From        string
+	To          string
+	Content     string
+	Time        string
+	ContentType int64
+	MessageType int64
+}
+
 type Manager struct {
 	handler *redis.Client
 }
@@ -48,5 +57,11 @@ func (m *Manager) getEmailBanKey(email string) string {
 	return fmt.Sprintf(
 		"email:ban:%s",
 		email,
+	)
+}
+
+func (m *Manager) getMsgReceiverKey(uuid string) string {
+	return fmt.Sprintf(
+		"chat:msg:%s", uuid,
 	)
 }
