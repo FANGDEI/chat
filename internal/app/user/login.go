@@ -4,6 +4,7 @@ import (
 	"chat/internal/app/service"
 	"chat/internal/pkg/errno"
 	"context"
+
 	"gorm.io/gorm"
 )
 
