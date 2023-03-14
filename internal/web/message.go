@@ -64,7 +64,6 @@ func (m *Manager) sendMessage(ctx iris.Context, code int, msg string, errs ...er
 
 func (m *Manager) sendErrorMessage(ctx iris.Context, err error) {
 	code, msg := errno.ParseErr(err)
-	m.logger.Error(msg)
 
 	var responseCode int
 	switch {
@@ -73,7 +72,7 @@ func (m *Manager) sendErrorMessage(ctx iris.Context, err error) {
 	default:
 		responseCode = http.StatusInternalServerError
 	}
-	m.sendSimpleMessage(ctx, responseCode, err)
+	m.sendMessage(ctx, responseCode, msg, err)
 }
 
 func (m *Manager) sendGRPCMessage(ctx iris.Context, code int, msg proto.Message, data any) {
