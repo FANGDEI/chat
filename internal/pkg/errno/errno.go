@@ -15,17 +15,17 @@ var (
 	ErrRedis         = &Errno{Code: 10101, Msg: "Redis error"}
 
 	// Email
-	ErrEmailFormat = &Errno{Code: 20101, Msg: "Email format error"}
-	ErrEmailBan    = &Errno{Code: 20102, Msg: "Email can't send to same account in one minute"}
-	ErrEmailAuth   = &Errno{Code: 20103, Msg: "Email code verify failed"}
+	ErrEmailFormat = &Errno{Code: 20101, Msg: "邮箱格式错误"}
+	ErrEmailBan    = &Errno{Code: 20102, Msg: "未到邮件可发送时间"}
+	ErrEmailAuth   = &Errno{Code: 20103, Msg: "验证码错误"}
 
 	// User
-	ErrUserNameLength     = &Errno{Code: 20201, Msg: "User length of the Name is illegal"}
-	ErrUserPasswordLength = &Errno{Code: 20202, Msg: "User length of the Password is illegal"}
-	ErrUserExists         = &Errno{Code: 20203, Msg: "User already exists"}
-	ErrUserNotFound       = &Errno{Code: 20204, Msg: "User not found"}
-	ErrUserPassword       = &Errno{Code: 20205, Msg: "User name or password is wrong"}
-	ErrUserOldPassword    = &Errno{Code: 20206, Msg: "User old password is wrong"}
+	ErrUserNameLength     = &Errno{Code: 20201, Msg: "用户名非法"}
+	ErrUserPasswordLength = &Errno{Code: 20202, Msg: "密码非法"}
+	ErrUserExists         = &Errno{Code: 20203, Msg: "用户已存在"}
+	ErrUserNotFound       = &Errno{Code: 20204, Msg: "用户不存在"}
+	ErrUserPassword       = &Errno{Code: 20205, Msg: "用户名或密码错误"}
+	ErrUserOldPassword    = &Errno{Code: 20206, Msg: "旧密码错误"}
 
 	// Friend
 	ErrFriendExists    = &Errno{Code: 20301, Msg: "Friend already exists"}
