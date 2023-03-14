@@ -51,7 +51,7 @@ func (c *Client) Read() {
 			defaultLogger.Info("client close conn")
 			break
 		}
-		// 序列化收到的 json 数据
+		// 反序列化收到的 json 数据
 		var req service.SendRequest
 		if err := json.Unmarshal(message, &req); err != nil {
 			defaultLogger.Error(err.Error())
