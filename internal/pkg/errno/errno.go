@@ -30,4 +30,9 @@ var (
 	// Friend
 	ErrFriendExists    = &Errno{Code: 20301, Msg: "Friend already exists"}
 	ErrFriendNotExists = &Errno{Code: 20302, Msg: "Friend not friend"}
+
+	// Chat
+	ErrGetUserMsg    = &Errno{Code: 20401, Msg: "Chat get message error"}
+	ErrRewriteMsg    = &Errno{Code: 20402, Msg: "Chat rewrite the message error"}
+	ErrCreateHistory = &Errno{Code: 20403, Msg: "Chat create history error"}
 )

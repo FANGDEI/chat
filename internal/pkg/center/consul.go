@@ -17,10 +17,10 @@ var (
 
 func init() {
 	var err error
-	err = load()
-	if err != nil {
-		log.Fatalf("failed to init consul: %v", err)
-	}
+	// err = load()
+	// if err != nil {
+	// 	log.Fatalf("failed to init consul: %v", err)
+	// }
 
 	config := consul.DefaultConfig()
 	config.Address = addr

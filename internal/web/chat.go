@@ -5,12 +5,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/websocket"
-	"github.com/kataras/iris/v12"
 	"log"
 	"math/rand"
 	"net/http"
 	"time"
+
+	"github.com/gorilla/websocket"
+	"github.com/kataras/iris/v12"
 )
 
 func (m *Manager) RouteChat() {
@@ -117,6 +118,7 @@ func (m *Manager) ws(ctx iris.Context) {
 		return
 	}
 	uuid := m.tokener.GetUUID(ctx)
+	log.Println(uuid)
 	client := &Client{
 		Uuid:  uuid,
 		Conn:  conn,
