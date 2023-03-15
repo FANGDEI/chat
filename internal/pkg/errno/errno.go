@@ -28,11 +28,14 @@ var (
 	ErrUserOldPassword    = &Errno{Code: 20206, Msg: "旧密码错误"}
 
 	// Friend
-	ErrFriendExists    = &Errno{Code: 20301, Msg: "Friend already exists"}
-	ErrFriendNotExists = &Errno{Code: 20302, Msg: "Friend not friend"}
+	ErrFriendExists    = &Errno{Code: 20301, Msg: "好友已存在"}
+	ErrFriendNotExists = &Errno{Code: 20302, Msg: "好友不存在"}
 
 	// Chat
-	ErrGetUserMsg    = &Errno{Code: 20401, Msg: "Chat get message error"}
-	ErrRewriteMsg    = &Errno{Code: 20402, Msg: "Chat rewrite the message error"}
-	ErrCreateHistory = &Errno{Code: 20403, Msg: "Chat create history error"}
+	ErrGetUserMsg    = &Errno{Code: 20401, Msg: "消息获取失败"}
+	ErrRewriteMsg    = &Errno{Code: 20402, Msg: "消息写回失败"}
+	ErrCreateHistory = &Errno{Code: 20403, Msg: "消息记录创建失败"}
+
+	// File
+	ErrUploadFile = &Errno{Code: 20501, Msg: "上传失败"}
 )
