@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = "./internal/app/service;service";
+
+package service;
+
+message UploadRequest {
+    string suffix = 1;
+    bytes data = 2;
+}
+
+message UploadResponse {
+    string url = 1;
+}
+
+service FileService {
+    rpc Upload(UploadRequest) returns (UploadResponse) {}
+}
