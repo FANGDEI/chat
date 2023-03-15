@@ -3,6 +3,7 @@ package web
 import (
 	"chat/internal/app/service"
 	"context"
+
 	"github.com/kataras/iris/v12"
 )
 
@@ -74,10 +75,10 @@ func (m *Manager) login(ctx iris.Context) {
 		m.sendErrorMessage(ctx, err)
 		return
 	}
-	m.sendJson(ctx, iris.StatusOK, map[string]any{
-		"msg":   "请求成功",
-		"token": response.Token,
-	})
+	// m.sendJson(ctx, iris.StatusOK, map[string]any{
+	// 	"token": response.Token,
+	// })
+	m.sendGRPCMessage(ctx, iris.StatusOK, response, service.UserLoginResponse{})
 }
 
 //type getUserInfoMessage struct {
