@@ -4,6 +4,7 @@ import (
 	"chat/internal/app/service"
 	"chat/internal/pkg/errno"
 	"context"
+
 	"gorm.io/gorm"
 )
 
@@ -23,7 +24,7 @@ func (m *Manager) GetOtherUserInfo(ctx context.Context, request *service.GetOthe
 			Name:      userInfo.Name,
 			Nickname:  userInfo.NickName,
 			Gender:    userInfo.Gender,
-			Avatar:    userInfo.Avatar,
+			Avatar:    m.obser.GetURL(userInfo.Avatar),
 			Email:     userInfo.Email,
 			Signature: userInfo.Signature,
 		},

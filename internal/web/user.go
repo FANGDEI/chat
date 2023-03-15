@@ -11,6 +11,7 @@ func (m *Manager) RouteUser() {
 	m.handler.PartyFunc("/user", func(p iris.Party) {
 		p.Get("/email/{email}", m.getEmail)
 		p.Get("/info", m.tokener.Serve(), m.getUserInfo)
+		p.Get("/info/{name}", m.tokener.Serve(), m.getOtherUserInfo)
 		p.Post("/register", m.register)
 		p.Post("/login", m.login)
 		p.Post("/update", m.tokener.Serve(), m.updateInfo)
@@ -103,6 +104,18 @@ func (m *Manager) getUserInfo(ctx iris.Context) {
 	//	"data": response.User,
 	//})
 	m.sendGRPCMessage(ctx, iris.StatusOK, response, service.GetUserInfoResponse{})
+}
+
+func (m *Manager) getOtherUserInfo(ctx iris.Context) {
+	name := ctx.Params().Get("name")
+	response, err := userClient.GetOtherUserInfo(context.Background(), &service.GetOtherUserInfoRequest{
+		Name: name,
+	})
+	if err != nil {
+		m.sendErrorMessage(ctx, err)
+		return
+	}
+	m.sendGRPCMessage(ctx, iris.StatusOK, response, service.GetOtherUserInfoResponse{})
 }
 
 type updateInfoMessage struct {

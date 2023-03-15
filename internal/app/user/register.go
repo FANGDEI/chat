@@ -26,6 +26,7 @@ func (m *Manager) Register(ctx context.Context, request *service.UserRegisterReq
 		Password: m.cryptoer.ToMd5(request.Password),
 		NickName: uuid,
 		Email:    request.Email,
+		Avatar:   "default.jpg",
 	})
 	if err != nil {
 		return nil, errno.ServerErr(errno.ErrUserExists, err.Error())

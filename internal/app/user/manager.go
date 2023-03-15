@@ -8,6 +8,7 @@ import (
 	"chat/internal/pkg/emailer"
 	"chat/internal/pkg/localer"
 	"chat/internal/pkg/logger"
+	"chat/internal/pkg/obser"
 )
 
 type Manager struct {
@@ -18,6 +19,7 @@ type Manager struct {
 	cryptoer *cryptoer.Manager
 	emailer  *emailer.Manager
 	tokener  *auther.Manager
+	obser    *obser.Manager
 }
 
 func New() *Manager {
@@ -28,5 +30,6 @@ func New() *Manager {
 		cryptoer: cryptoer.GetDefaultCryptoerManager(),
 		emailer:  emailer.GetDefaultEmailerManager(),
 		tokener:  auther.GetDefaultTokenerManager(),
+		obser:    obser.GetDefaultObserManager(),
 	}
 }
