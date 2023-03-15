@@ -7,8 +7,6 @@ import (
 	"chat/internal/pkg/errno"
 	"context"
 	"time"
-
-	"gorm.io/gorm"
 )
 
 func (m *Manager) AddFriend(ctx context.Context, request *service.AddFriendRequest) (*service.Response, error) {
@@ -20,12 +18,8 @@ func (m *Manager) AddFriend(ctx context.Context, request *service.AddFriendReque
 		return nil, errno.ServerErr(errno.ErrDatabase, err.Error())
 	}
 	// 查询要添加好友的信息
-	// 查询不到就返回 ErrUserNotFound
 	finfo, err := m.localer.GetUserInfoWithName(friendName)
 	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, errno.ServerErr(errno.ErrUserNotFound, err.Error())
-		}
 		return nil, errno.ServerErr(errno.ErrDatabase, err.Error())
 	}
 	// 判断是否已经是好友
@@ -34,7 +28,7 @@ func (m *Manager) AddFriend(ctx context.Context, request *service.AddFriendReque
 	}
 	err = m.localer.CreateFriend(info.ID, finfo.ID)
 	if err != nil {
-		return nil, errno.ServerErr(errno.ErrDatabase, err.Error())
+		return nil, errno.ServerErr(errno.ErrDuplicateRequest, err.Error())
 	}
 	err = m.cacher.Send(&cacher.Message{
 		From:        info.Uuid,

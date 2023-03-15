@@ -32,9 +32,10 @@ var (
 	ErrFriendNotExists = &Errno{Code: 20302, Msg: "好友不存在"}
 
 	// Chat
-	ErrGetUserMsg    = &Errno{Code: 20401, Msg: "消息获取失败"}
-	ErrRewriteMsg    = &Errno{Code: 20402, Msg: "消息写回失败"}
-	ErrCreateHistory = &Errno{Code: 20403, Msg: "消息记录创建失败"}
+	ErrGetUserMsg       = &Errno{Code: 20401, Msg: "消息获取失败"}
+	ErrRewriteMsg       = &Errno{Code: 20402, Msg: "消息写回失败"}
+	ErrCreateHistory    = &Errno{Code: 20403, Msg: "消息记录创建失败"}
+	ErrDuplicateRequest = &Errno{Code: 20404, Msg: "重复请求, 请等待对方验证"}
 
 	// File
 	ErrUploadFile = &Errno{Code: 20501, Msg: "上传失败"}

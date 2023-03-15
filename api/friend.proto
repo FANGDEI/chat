@@ -16,7 +16,14 @@ message DelFriendRequest {
   string friend_name = 2;
 }
 
+message AcceptFriendRequest {
+  string self_uuid = 1;
+  string uuid = 2;
+  bool agree = 3;
+}
+
 service FriendService {
   rpc AddFriend(AddFriendRequest) returns (Response) {}
   rpc DelFriend(DelFriendRequest) returns (Response) {}
+  rpc AcceptFriend(AcceptFriendRequest) returns (Response) {}
 }

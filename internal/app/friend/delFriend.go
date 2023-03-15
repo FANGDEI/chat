@@ -4,7 +4,6 @@ import (
 	"chat/internal/app/service"
 	"chat/internal/pkg/errno"
 	"context"
-	"gorm.io/gorm"
 )
 
 func (m *Manager) DelFriend(ctx context.Context, request *service.DelFriendRequest) (*service.Response, error) {
@@ -15,13 +14,9 @@ func (m *Manager) DelFriend(ctx context.Context, request *service.DelFriendReque
 	if err != nil {
 		return nil, errno.ServerErr(errno.ErrDatabase, err.Error())
 	}
-	// 查询要添加好友的信息
-	// 查询不到就返回 ErrUserNotFound
+	// 查询要删除好友的信息
 	finfo, err := m.localer.GetUserInfoWithName(friendName)
 	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, errno.ServerErr(errno.ErrUserNotFound, err.Error())
-		}
 		return nil, errno.ServerErr(errno.ErrDatabase, err.Error())
 	}
 	if exists := m.localer.FriendExists(info.ID, finfo.ID); !exists {
