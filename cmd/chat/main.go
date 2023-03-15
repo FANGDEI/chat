@@ -15,7 +15,7 @@ import (
 
 var (
 	addr = flag.String("addr", "127.0.0.1", "The server address")
-	port = flag.Int("port", 50054, "The server port")
+	port = flag.Int("port", 50055, "The server port")
 )
 
 func main() {

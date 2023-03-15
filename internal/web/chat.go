@@ -16,20 +16,20 @@ import (
 
 func (m *Manager) RouteChat() {
 	m.handler.PartyFunc("/chat", func(p iris.Party) {
-		//p.Use(m.tokener.Serve())
+		p.Use(m.tokener.Serve())
 		p.Get("/ws", m.ws)
 		p.Get("/ws/test", m.wsTest)
 	})
 }
 
-type Message struct {
-	From        string `json:"from"`
-	To          string `json:"to"`
-	Content     string `json:"content"`
-	MessageType int64  `json:"message_type"` // 1 群聊 2 私聊
-	ContentType int64  `json:"content_type"`
-	Time        string `json:"time"`
-}
+// type Message struct {
+// 	From        string `json:"from"`
+// 	To          string `json:"to"`
+// 	Content     string `json:"content"`
+// 	MessageType int64  `json:"message_type"` // 1 群聊 2 私聊
+// 	ContentType int64  `json:"content_type"`
+// 	Time        string `json:"time"`
+// }
 
 type Client struct {
 	Uuid string
@@ -110,7 +110,7 @@ func (m *Manager) ws(ctx iris.Context) {
 		CheckOrigin: func(r *http.Request) bool {
 			return true
 		},
-		// Subprotocols: []string{ctx.Request().Header.Get("Sec-WebSocket-Protocol")},
+		Subprotocols: []string{ctx.Request().Header.Get("Sec-WebSocket-Protocol")},
 	}
 	conn, err := upGrader.Upgrade(ctx.ResponseWriter(), ctx.Request(), nil)
 	if err != nil {
@@ -118,7 +118,6 @@ func (m *Manager) ws(ctx iris.Context) {
 		return
 	}
 	uuid := m.tokener.GetUUID(ctx)
-	log.Println(uuid)
 	client := &Client{
 		Uuid:  uuid,
 		Conn:  conn,

@@ -2,8 +2,12 @@ package friend
 
 import (
 	"chat/internal/app/service"
+	"chat/internal/pkg/cacher"
+	"chat/internal/pkg/constanter"
 	"chat/internal/pkg/errno"
 	"context"
+	"time"
+
 	"gorm.io/gorm"
 )
 
@@ -31,6 +35,17 @@ func (m *Manager) AddFriend(ctx context.Context, request *service.AddFriendReque
 	err = m.localer.CreateFriend(info.ID, finfo.ID)
 	if err != nil {
 		return nil, errno.ServerErr(errno.ErrDatabase, err.Error())
+	}
+	err = m.cacher.Send(&cacher.Message{
+		From:        info.Uuid,
+		To:          finfo.Uuid,
+		Content:     info.Name + "请求添加你为好友",
+		ContentType: constanter.FRIEND_REQUEST,
+		MessageType: constanter.MESSAGE_TYPE_USER,
+		Time:        time.Now().Format("2006.01.02 15:04:05"),
+	})
+	if err != nil {
+		return nil, errno.ServerErr(errno.ErrRedis, err.Error())
 	}
 	return &service.Response{}, nil
 }

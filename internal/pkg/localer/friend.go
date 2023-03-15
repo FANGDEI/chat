@@ -4,6 +4,7 @@ type Friend struct {
 	ID       int64 `json:"id"`
 	UserID   int64 `json:"user_id"`
 	FriendID int64 `json:"friend_id"`
+	Agree    bool  `json:"agree"`
 	Re       bool  `json:"re"`
 }
 
@@ -25,5 +26,5 @@ func (m *Manager) DeleteFriend(userID, friendID int64) error {
 func (m *Manager) FriendExists(userID, friendID int64) bool {
 	var u SimpleUser
 	err := m.handler.Table(friend).Where("user_id = ? AND friend_id = ?", userID, friendID).Take(&u).Error
-	return err != nil || u.ID != 0
+	return (err == nil) && (u.ID != 0)
 }

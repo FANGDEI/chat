@@ -1,7 +1,7 @@
 package main
 
 import (
-	"chat/internal/app/file"
+	"chat/internal/app/friend"
 	"chat/internal/app/service"
 	"chat/internal/pkg/center"
 	"flag"
@@ -15,7 +15,7 @@ import (
 
 var (
 	addr = flag.String("addr", "127.0.0.1", "The server address")
-	port = flag.Int("port", 50054, "The server port")
+	port = flag.Int("port", 50053, "The server port")
 )
 
 func main() {
@@ -25,16 +25,16 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	service.RegisterFileServiceServer(s, file.New())
+	service.RegisterFriendServiceServer(s, friend.New())
 	// 健康检查
 	//grpc_health_v1.RegisterHealthServer(s, &launcher.HealthImpl{})
 
 	// 服务注册
 	err = center.Register(consul.AgentServiceRegistration{
-		ID:      "file-1", // 服务节点的名称
-		Name:    "file",   // 服务名称
-		Port:    *port,    // 服务端口
-		Address: *addr,    // 服务 IP
+		ID:      "friend-1", // 服务节点的名称
+		Name:    "friend",   // 服务名称
+		Port:    *port,      // 服务端口
+		Address: *addr,      // 服务 IP
 		//Check: &consul.AgentServiceCheck{ // 健康检查
 		//	Interval:                       "5s", // 健康检查间隔
 		//	GRPC:                           fmt.Sprintf("%v:%v/%v", *addr, *port, "health"),

@@ -5,6 +5,7 @@ import (
 	"chat/internal/pkg/cacher"
 	"chat/internal/pkg/errno"
 	"context"
+	"time"
 )
 
 func (m *Manager) Send(ctx context.Context, request *service.SendRequest) (*service.Response, error) {
@@ -15,7 +16,7 @@ func (m *Manager) Send(ctx context.Context, request *service.SendRequest) (*serv
 		Content:     request.Content,
 		ContentType: request.ContentType,
 		MessageType: request.MessageType,
-		Time:        request.Time,
+		Time:        time.Now().Format("2006.01.02 15:04:05"),
 	}
 	err := m.cacher.Send(data)
 	if err != nil {

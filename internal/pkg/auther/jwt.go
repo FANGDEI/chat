@@ -1,11 +1,12 @@
 package auther
 
 import (
+	"log"
+	"time"
+
 	"github.com/golang-jwt/jwt/v4"
 	jardiniere "github.com/iris-contrib/middleware/jwt"
 	"github.com/kataras/iris/v12"
-	"log"
-	"time"
 )
 
 func init() {
@@ -32,6 +33,9 @@ func New() *Manager {
 					"msg": "权限认证失败",
 				})
 			},
+			// Extractor: func(ctx iris.Context) (string, error) {
+			// 	return ctx.GetHeader("Sec-WebSocket-Protocol"), nil
+			// },
 		}),
 	}
 }

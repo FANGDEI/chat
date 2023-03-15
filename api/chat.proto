@@ -12,7 +12,6 @@ message SendRequest {
   string content = 3;
   int64 message_type = 4;
   int64 content_type = 5;
-  string time = 6;
 }
 
 message GetRequest {

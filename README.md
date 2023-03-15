@@ -6,6 +6,7 @@
 * RPC框架gRPC
 * 数据库MySQL
 * 消息队列Redis
+* 对象存储Minio
 * 长连接websocket
 * 日志框架Uber的zap
 * 服务注册与配置中心consul
