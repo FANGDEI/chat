@@ -10,7 +10,7 @@
 * 长连接websocket
 * 日志框架Uber的zap
 * 服务注册与配置中心consul
-* 部署使用Makefile以及Dockerfile
+* 部署使用Makefile以及Dockerfile 
 ## 目录结构
 ```FILE
 .
