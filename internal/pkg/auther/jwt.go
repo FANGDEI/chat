@@ -1,7 +1,9 @@
 package auther
 
 import (
+	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -26,6 +28,20 @@ func New() *Manager {
 				return []byte("chat"), nil
 			},
 			SigningMethod: jwt.SigningMethodHS256,
+			// 自定义token提取器
+			Extractor: func(ctx iris.Context) (string, error) {
+				authHeader := ctx.GetHeader("Authorization")
+				if authHeader == "" {
+					if authHeader = ctx.GetHeader("Sec-WebSocket-Protocol"); authHeader == "" {
+						return "", nil // No error, just no token
+					}
+				}
+				authHeaderParts := strings.Split(authHeader, " ")
+				if len(authHeaderParts) != 2 || strings.ToLower(authHeaderParts[0]) != "bearer" {
+					return "", fmt.Errorf("authorization header format must be Bearer {token}")
+				}
+				return authHeaderParts[1], nil
+			},
 			ErrorHandler: func(ctx iris.Context, err error) {
 				ctx.StatusCode(iris.StatusForbidden)
 				log.Printf("[%s] CODE(%d) ERROR : %+v\n", ctx.Path(), iris.StatusForbidden, err)
@@ -33,9 +49,6 @@ func New() *Manager {
 					"msg": "权限认证失败",
 				})
 			},
-			// Extractor: func(ctx iris.Context) (string, error) {
-			// 	return ctx.GetHeader("Sec-WebSocket-Protocol"), nil
-			// },
 		}),
 	}
 }
