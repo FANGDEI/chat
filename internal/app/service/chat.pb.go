@@ -25,8 +25,8 @@ type SendRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	From        string `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"` // uuid
-	To          string `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`     // uuid
+	From        string `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"` // id
+	To          string `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`     // id
 	Content     string `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
 	MessageType int64  `protobuf:"varint,4,opt,name=message_type,json=messageType,proto3" json:"message_type,omitempty"`
 	ContentType int64  `protobuf:"varint,5,opt,name=content_type,json=contentType,proto3" json:"content_type,omitempty"`

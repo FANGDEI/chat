@@ -11,7 +11,7 @@ import (
 func (m *Manager) UpdateUserInfo(ctx context.Context, request *service.UpdateUserInfoRequest) (*service.Response, error) {
 	m.logger.Info("User service, UpdateUserInfo service")
 	str := strings.Split(request.User.Avatar, "/")
-	err := m.localer.UpdateUserInfoWithUuid(request.Uuid, localer.SimpleUser{
+	err := m.localer.UpdateUserInfoWithID(request.Id, localer.SimpleUser{
 		NickName:  request.User.Nickname,
 		Gender:    request.User.Gender,
 		Avatar:    str[len(str)-1],

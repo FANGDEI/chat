@@ -26,7 +26,7 @@ func (m *Manager) AddFriend(ctx context.Context, request *service.AddFriendReque
 	if exists := m.localer.FriendExists(info.ID, finfo.ID); exists {
 		return nil, errno.ServerErr(errno.ErrFriendExists, "friend already exists")
 	}
-	err = m.localer.CreateFriend(info.ID, finfo.ID)
+	err = m.localer.CreateFriend(finfo.ID, info.ID)
 	if err != nil {
 		return nil, errno.ServerErr(errno.ErrDuplicateRequest, err.Error())
 	}

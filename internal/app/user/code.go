@@ -12,10 +12,10 @@ import (
 func (m *Manager) Code(ctx context.Context, request *service.CodeRequest) (*service.Response, error) {
 	m.logger.Info("User service, Code service")
 	if !m.emailer.IsEmail(request.Email) {
-		return nil, errno.ServerErr(errno.ErrEmailFormat, "not email")
+		return nil, errno.ServerErr(errno.ErrEmailFormat, "email format error")
 	}
 	if m.cacher.IsEmailBanned(request.Email) {
-		return nil, errno.ServerErr(errno.ErrEmailBan, "get code too fast")
+		return nil, errno.ServerErr(errno.ErrEmailBan, "email ban to send")
 	}
 	code := fmt.Sprintf("%06d", rand.Intn(1000000))
 	err := m.cacher.SetEmailCode(request.Email, code)

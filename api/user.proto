@@ -28,7 +28,6 @@ message UserLoginResponse {
 
 message SimpleUser {
   int64 id = 1;
-  string uuid = 2;
   string name = 3;
   string nickname = 4;
   string gender = 5;
@@ -38,7 +37,7 @@ message SimpleUser {
 }
 
 message GetUserInfoRequest {
-  string uuid = 1;
+  int64 id = 1;
 }
 
 message GetUserInfoResponse {
@@ -46,18 +45,18 @@ message GetUserInfoResponse {
 }
 
 message UserChangePasswordRequest {
-  string uuid = 1;
+  int64 id = 1;
   string old_pwd = 2;
   string new_pwd = 3;
 }
 
 message UpdateUserInfoRequest {
-  string uuid = 1;
+  int64 id = 1;
   SimpleUser user = 2;
 }
 
 message GetUserListRequest {
-  string uuid = 1;
+  int64 id = 1;
 }
 
 message GetUserListResponse {

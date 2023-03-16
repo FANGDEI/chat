@@ -53,14 +53,13 @@ func New() *Manager {
 	}
 }
 
-func (m *Manager) NewToken(id int64, uuid string) (tokenString string, err error) {
+func (m *Manager) NewToken(id int64) (tokenString string, err error) {
 	t := time.Now()
 	message := jwt.MapClaims{
-		"iat":  t.Unix(),
-		"exp":  t.Add(7 * 24 * time.Hour).Unix(),
-		"iss":  "CHAT",
-		"id":   id,
-		"uuid": uuid,
+		"iat": t.Unix(),
+		"exp": t.Add(7 * 24 * time.Hour).Unix(),
+		"iss": "CHAT",
+		"id":  id,
 	}
 	tokenString, err = jwt.NewWithClaims(jwt.SigningMethodHS256, message).SignedString([]byte("chat"))
 	return
@@ -74,9 +73,9 @@ func (m *Manager) GetID(ctx iris.Context) int64 {
 	return int64(ctx.Values().Get("jwt").(*jwt.Token).Claims.(jwt.MapClaims)["id"].(float64))
 }
 
-func (m *Manager) GetUUID(ctx iris.Context) string {
-	return ctx.Values().Get("jwt").(*jwt.Token).Claims.(jwt.MapClaims)["uuid"].(string)
-}
+//func (m *Manager) GetUUID(ctx iris.Context) string {
+//	return ctx.Values().Get("jwt").(*jwt.Token).Claims.(jwt.MapClaims)["uuid"].(string)
+//}
 
 func GetDefaultTokenerManager() *Manager {
 	return defaultTokenerManager

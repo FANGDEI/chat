@@ -20,7 +20,6 @@ func (m *Manager) GetOtherUserInfo(ctx context.Context, request *service.GetOthe
 	return &service.GetOtherUserInfoResponse{
 		User: &service.SimpleUser{
 			Id:        userInfo.ID,
-			Uuid:      userInfo.Uuid,
 			Name:      userInfo.Name,
 			Nickname:  userInfo.NickName,
 			Gender:    userInfo.Gender,

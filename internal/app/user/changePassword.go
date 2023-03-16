@@ -8,15 +8,15 @@ import (
 
 func (m *Manager) ChangePassword(ctx context.Context, request *service.UserChangePasswordRequest) (*service.Response, error) {
 	m.logger.Info("User service, ChangePassword service")
-	uuid, oldPwd, newPwd := request.Uuid, request.OldPwd, request.NewPwd
-	user, err := m.localer.GetUserInformationWithUuid(uuid)
+	id, oldPwd, newPwd := request.Id, request.OldPwd, request.NewPwd
+	user, err := m.localer.GetUserInformationWithID(id)
 	if err != nil {
 		return nil, errno.ServerErr(errno.ErrDatabase, err.Error())
 	}
 	if user.Password != m.cryptoer.ToMd5(oldPwd) {
 		return nil, errno.ServerErr(errno.ErrUserOldPassword, "old password not equal")
 	}
-	err = m.localer.UpdateUserPasswordWithUuid(uuid, m.cryptoer.ToMd5(newPwd))
+	err = m.localer.UpdateUserPasswordWithID(id, m.cryptoer.ToMd5(newPwd))
 	if err != nil {
 		return nil, errno.ServerErr(errno.ErrDatabase, err.Error())
 	}

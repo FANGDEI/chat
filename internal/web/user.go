@@ -92,9 +92,9 @@ func (m *Manager) getUserInfo(ctx iris.Context) {
 	//	m.sendSimpleMessage(ctx, iris.StatusBadRequest, err)
 	//	return
 	//}
-	uuid := m.tokener.GetUUID(ctx)
+	id := m.tokener.GetID(ctx)
 	response, err := userClient.GetUserInfo(context.Background(), &service.GetUserInfoRequest{
-		Uuid: uuid,
+		Id: id,
 	})
 	if err != nil {
 		m.sendErrorMessage(ctx, err)
@@ -126,14 +126,14 @@ type updateInfoMessage struct {
 }
 
 func (m *Manager) updateInfo(ctx iris.Context) {
-	uuid := m.tokener.GetUUID(ctx)
+	id := m.tokener.GetID(ctx)
 	var msg updateInfoMessage
 	if err := ctx.ReadJSON(&msg); err != nil {
 		m.sendSimpleMessage(ctx, iris.StatusBadRequest, err)
 		return
 	}
 	_, err := userClient.UpdateUserInfo(context.Background(), &service.UpdateUserInfoRequest{
-		Uuid: uuid,
+		Id: id,
 		User: &service.SimpleUser{
 			Nickname:  msg.NickName,
 			Gender:    msg.Gender,
@@ -154,14 +154,14 @@ type changePwdMessage struct {
 }
 
 func (m *Manager) changePwd(ctx iris.Context) {
-	uuid := m.tokener.GetUUID(ctx)
+	id := m.tokener.GetID(ctx)
 	var msg changePwdMessage
 	if err := ctx.ReadJSON(&msg); err != nil {
 		m.sendSimpleMessage(ctx, iris.StatusBadRequest, err)
 		return
 	}
 	_, err := userClient.ChangePassword(context.Background(), &service.UserChangePasswordRequest{
-		Uuid:   uuid,
+		Id:     id,
 		OldPwd: msg.OldPwd,
 		NewPwd: msg.NewPwd,
 	})

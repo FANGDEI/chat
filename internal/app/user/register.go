@@ -15,16 +15,16 @@ func (m *Manager) Register(ctx context.Context, request *service.UserRegisterReq
 	if len(request.Password) < 8 || len(request.Password) > 16 {
 		return nil, errno.ServerErr(errno.ErrUserPasswordLength, "error length of Password")
 	}
+	// 判断验证码
 	err := m.cacher.AuthEmail(request.Email, request.Code)
 	if err != nil {
 		return nil, errno.ServerErr(errno.ErrEmailAuth, err.Error())
 	}
-	uuid := m.cryptoer.GetUUIDWithoutSplit()
+	// 创建用户
 	err = m.localer.CreateUser(localer.User{
-		Uuid:     uuid,
 		Name:     request.Name,
 		Password: m.cryptoer.ToMd5(request.Password),
-		NickName: uuid,
+		NickName: m.cryptoer.GetUUIDWithoutSplit(),
 		Email:    request.Email,
 		Avatar:   "default.jpg",
 	})

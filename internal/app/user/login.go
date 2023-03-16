@@ -18,9 +18,9 @@ func (m *Manager) Login(ctx context.Context, request *service.UserLoginRequest) 
 		return nil, errno.ServerErr(errno.ErrDatabase, err.Error())
 	}
 	if user.Password != m.cryptoer.ToMd5(request.Password) {
-		return nil, errno.ServerErr(errno.ErrUserPassword, "name or password is wrong")
+		return nil, errno.ServerErr(errno.ErrUserPassword, "name or password error")
 	}
-	token, err := m.tokener.NewToken(user.ID, user.Uuid)
+	token, err := m.tokener.NewToken(user.ID)
 	if err != nil {
 		return nil, errno.ServerErr(errno.ErrTokenGenerate, err.Error())
 	}

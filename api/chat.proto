@@ -7,8 +7,8 @@ package service;
 import "api/common.proto";
 
 message SendRequest {
-  string from = 1; // uuid
-  string to = 2; // uuid
+  string from = 1; // id
+  string to = 2; // id
   string content = 3;
   int64 message_type = 4;
   int64 content_type = 5;

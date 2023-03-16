@@ -7,13 +7,13 @@ package service;
 import "api/common.proto";
 
 message AddFriendRequest {
-  string uuid = 1;
-  string friend_name = 2;
+  string id = 1;
+  string friend_id = 2;
 }
 
 message DelFriendRequest {
-  string uuid = 1;
-  string friend_name = 2;
+  string id = 1;
+  string friend_id = 2;
 }
 
 message AcceptFriendRequest {
