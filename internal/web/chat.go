@@ -97,7 +97,8 @@ func (c *Client) Write() {
 		}
 		// 将消息 json 串发送给前端解析
 		for _, msg := range response.Msg {
-			c.Conn.WriteMessage(websocket.TextMessage, []byte(msg))
+			err := c.Conn.WriteMessage(websocket.TextMessage, []byte(msg))
+			log.Println(err)
 		}
 	}
 }

@@ -20,7 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type FriendServiceClient interface {
 	AddFriend(ctx context.Context, in *AddFriendRequest, opts ...grpc.CallOption) (*Response, error)
 	DelFriend(ctx context.Context, in *DelFriendRequest, opts ...grpc.CallOption) (*Response, error)
-	AcceptFriend(ctx context.Context, in *AcceptFriendRequest, opts ...grpc.CallOption) (*Response, error)
+	AgreeApply(ctx context.Context, in *AgreeApplyRequest, opts ...grpc.CallOption) (*Response, error)
 }
 
 type friendServiceClient struct {
@@ -49,9 +49,9 @@ func (c *friendServiceClient) DelFriend(ctx context.Context, in *DelFriendReques
 	return out, nil
 }
 
-func (c *friendServiceClient) AcceptFriend(ctx context.Context, in *AcceptFriendRequest, opts ...grpc.CallOption) (*Response, error) {
+func (c *friendServiceClient) AgreeApply(ctx context.Context, in *AgreeApplyRequest, opts ...grpc.CallOption) (*Response, error) {
 	out := new(Response)
-	err := c.cc.Invoke(ctx, "/service.FriendService/AcceptFriend", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/service.FriendService/AgreeApply", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func (c *friendServiceClient) AcceptFriend(ctx context.Context, in *AcceptFriend
 type FriendServiceServer interface {
 	AddFriend(context.Context, *AddFriendRequest) (*Response, error)
 	DelFriend(context.Context, *DelFriendRequest) (*Response, error)
-	AcceptFriend(context.Context, *AcceptFriendRequest) (*Response, error)
+	AgreeApply(context.Context, *AgreeApplyRequest) (*Response, error)
 	mustEmbedUnimplementedFriendServiceServer()
 }
 
@@ -78,8 +78,8 @@ func (UnimplementedFriendServiceServer) AddFriend(context.Context, *AddFriendReq
 func (UnimplementedFriendServiceServer) DelFriend(context.Context, *DelFriendRequest) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DelFriend not implemented")
 }
-func (UnimplementedFriendServiceServer) AcceptFriend(context.Context, *AcceptFriendRequest) (*Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AcceptFriend not implemented")
+func (UnimplementedFriendServiceServer) AgreeApply(context.Context, *AgreeApplyRequest) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AgreeApply not implemented")
 }
 func (UnimplementedFriendServiceServer) mustEmbedUnimplementedFriendServiceServer() {}
 
@@ -130,20 +130,20 @@ func _FriendService_DelFriend_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FriendService_AcceptFriend_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AcceptFriendRequest)
+func _FriendService_AgreeApply_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AgreeApplyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FriendServiceServer).AcceptFriend(ctx, in)
+		return srv.(FriendServiceServer).AgreeApply(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/service.FriendService/AcceptFriend",
+		FullMethod: "/service.FriendService/AgreeApply",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FriendServiceServer).AcceptFriend(ctx, req.(*AcceptFriendRequest))
+		return srv.(FriendServiceServer).AgreeApply(ctx, req.(*AgreeApplyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -164,8 +164,8 @@ var FriendService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _FriendService_DelFriend_Handler,
 		},
 		{
-			MethodName: "AcceptFriend",
-			Handler:    _FriendService_AcceptFriend_Handler,
+			MethodName: "AgreeApply",
+			Handler:    _FriendService_AgreeApply_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -43,3 +43,9 @@ func (m *Manager) DeleteFriend(userID, friendID int64) error {
 	})
 	return err
 }
+
+func (m *Manager) IsFriend(userID, friendID int64) bool {
+	var id int64
+	err := m.handler.Table(friend).Select("id").Where("user_id = ? AND friend_id = ?", userID, friendID).Take(&id).Error
+	return err == nil && id != 0
+}

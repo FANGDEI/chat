@@ -8,21 +8,11 @@ import (
 
 func (m *Manager) DelFriend(ctx context.Context, request *service.DelFriendRequest) (*service.Response, error) {
 	m.logger.Info("Friend Service, DelFriend Service")
-	// 获取当前用户信息
-	uuid, friendName := request.Uuid, request.FriendName
-	info, err := m.localer.GetUserInfoWithUuid(uuid)
-	if err != nil {
-		return nil, errno.ServerErr(errno.ErrDatabase, err.Error())
-	}
-	// 查询要删除好友的信息
-	finfo, err := m.localer.GetUserInfoWithName(friendName)
-	if err != nil {
-		return nil, errno.ServerErr(errno.ErrDatabase, err.Error())
-	}
-	if exists := m.localer.FriendExists(info.ID, finfo.ID); !exists {
+	id, friendID := request.Id, request.FriendId
+	if exists := m.localer.IsFriend(id, friendID); !exists {
 		return nil, errno.ServerErr(errno.ErrFriendNotExists, "not friend")
 	}
-	err = m.localer.DeleteFriend(info.ID, finfo.ID)
+	err := m.localer.DeleteFriend(id, friendID)
 	if err != nil {
 		return nil, errno.ErrDatabase
 	}

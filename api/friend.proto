@@ -7,23 +7,24 @@ package service;
 import "api/common.proto";
 
 message AddFriendRequest {
-  string id = 1;
-  string friend_id = 2;
+  int64 id = 1;
+  int64 friend_id = 2;
+  string apply_msg = 3;
 }
 
 message DelFriendRequest {
-  string id = 1;
-  string friend_id = 2;
+  int64 id = 1;
+  int64 friend_id = 2;
 }
 
-message AcceptFriendRequest {
-  string self_uuid = 1;
-  string uuid = 2;
+message AgreeApplyRequest {
+  int64 id = 1;
+  int64 friend_id = 2;
   bool agree = 3;
 }
 
 service FriendService {
   rpc AddFriend(AddFriendRequest) returns (Response) {}
   rpc DelFriend(DelFriendRequest) returns (Response) {}
-  rpc AcceptFriend(AcceptFriendRequest) returns (Response) {}
+  rpc AgreeApply(AgreeApplyRequest) returns (Response) {}
 }
