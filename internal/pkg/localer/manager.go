@@ -40,6 +40,19 @@ func New() (*Manager, error) {
 	}, err
 }
 
+func (m *Manager) execTx(fn func(*Manager) error) error {
+	tx := m.handler.Begin()
+	manager := &Manager{handler: tx}
+	err := fn(manager)
+	if err != nil {
+		if rbErr := tx.Rollback().Error; rbErr != nil {
+			return fmt.Errorf("tx err: %v, rb err: %v", err, rbErr)
+		}
+		return err
+	}
+	return tx.Commit().Error
+}
+
 func GetDefaultLocalerManager() *Manager {
 	return defaultLocalerManager
 }
