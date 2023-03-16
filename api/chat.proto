@@ -7,15 +7,15 @@ package service;
 import "api/common.proto";
 
 message SendRequest {
-  string from = 1; // id
-  string to = 2; // id
+  int64 from = 1; // id
+  int64 to = 2; // id
   string content = 3;
   int64 message_type = 4;
   int64 content_type = 5;
 }
 
 message GetRequest {
-  string uuid = 1;
+  int64 id = 1;
 }
 
 //message Message {

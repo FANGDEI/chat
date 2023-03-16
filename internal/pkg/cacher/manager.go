@@ -18,12 +18,12 @@ func init() {
 var defaultCacherManager *Manager
 
 type Message struct {
-	From        string
-	To          string
-	Content     string
-	Time        string
-	ContentType int64
-	MessageType int64
+	From        int64  `json:"from"`
+	To          int64  `json:"to"`
+	Content     string `json:"content"`
+	Time        string `json:"time"`
+	ContentType int64  `json:"content_type"`
+	MessageType int64  `json:"message_type"`
 }
 
 type Manager struct {
@@ -60,8 +60,8 @@ func (m *Manager) getEmailBanKey(email string) string {
 	)
 }
 
-func (m *Manager) getMsgReceiverKey(uuid string) string {
+func (m *Manager) getMsgReceiverKey(id int64) string {
 	return fmt.Sprintf(
-		"chat:msg:%s", uuid,
+		"chat:msg:%d", id,
 	)
 }

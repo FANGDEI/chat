@@ -17,8 +17,8 @@ func (m *Manager) Send(message *Message) error {
 	return m.handler.LPush(context.Background(), m.getMsgReceiverKey(message.To), msg).Err()
 }
 
-func (m *Manager) GetMsg(uuid string, expiration time.Duration) ([]string, error) {
-	key := m.getMsgReceiverKey(uuid)
+func (m *Manager) GetMsg(id int64, expiration time.Duration) ([]string, error) {
+	key := m.getMsgReceiverKey(id)
 	if m.handler.LLen(context.Background(), key).Val() == 0 {
 		// 阻塞读
 		msg, err := m.handler.BRPop(context.Background(), expiration, key).Result()
@@ -40,8 +40,8 @@ func (m *Manager) GetMsg(uuid string, expiration time.Duration) ([]string, error
 }
 
 // Rewrite
-func (m *Manager) Rewrite(uuid string, msgs []string) error {
-	key := m.getMsgReceiverKey(uuid)
+func (m *Manager) Rewrite(id int64, msgs []string) error {
+	key := m.getMsgReceiverKey(id)
 	for i := len(msgs) - 1; i >= 0; i-- {
 		if err := m.handler.RPush(context.Background(), key, msgs[i]).Err(); err != nil {
 			return err
@@ -51,6 +51,6 @@ func (m *Manager) Rewrite(uuid string, msgs []string) error {
 }
 
 // CreateHistory
-func (m *Manager) CreateHistory(uuid string, data []string) error {
+func (m *Manager) CreateHistory(id int64, data []string) error {
 	return nil
 }

@@ -17,17 +17,17 @@ func (m *Manager) Get(ctx context.Context, request *service.GetRequest) (*servic
 	} else {
 		expiration = ddl.Sub(time.Now())
 	}
-	msgs, err := m.cacher.GetMsg(request.Uuid, expiration)
+	msgs, err := m.cacher.GetMsg(request.Id, expiration)
 	if err != nil {
 		return nil, errno.ServerErr(errno.ErrGetUserMsg, err.Error())
 	}
 	select {
 	case <-ctx.Done():
-		if err := m.cacher.Rewrite(request.Uuid, msgs); err != nil {
+		if err := m.cacher.Rewrite(request.Id, msgs); err != nil {
 			return nil, errno.ServerErr(errno.ErrRewriteMsg, err.Error())
 		}
 	default:
-		if err := m.cacher.CreateHistory(request.Uuid, msgs); err != nil {
+		if err := m.cacher.CreateHistory(request.Id, msgs); err != nil {
 			return nil, errno.ServerErr(errno.ErrCreateHistory, err.Error())
 		}
 		response.Msg = msgs
