@@ -133,7 +133,6 @@ func (m *Manager) ws(ctx iris.Context) {
 	}
 
 	// 向 Hub 注册 websocket 连接
-	// 用于查找当前在线用户
 	MyHub.Register <- client
 	go client.Read()
 	go client.Write()

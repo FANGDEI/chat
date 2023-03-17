@@ -3,8 +3,9 @@ package cacher
 import (
 	"context"
 	"fmt"
-	"github.com/go-redis/redis/v8"
 	"log"
+
+	"github.com/go-redis/redis/v8"
 )
 
 func init() {
@@ -63,5 +64,11 @@ func (m *Manager) getEmailBanKey(email string) string {
 func (m *Manager) getMsgReceiverKey(id int64) string {
 	return fmt.Sprintf(
 		"chat:msg:%d", id,
+	)
+}
+
+func (m *Manager) getHistoryKey(id, otherID int64) string {
+	return fmt.Sprintf(
+		"history:%d-%d", id, otherID,
 	)
 }

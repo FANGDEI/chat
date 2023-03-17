@@ -51,6 +51,19 @@ func (m *Manager) Rewrite(id int64, msgs []string) error {
 }
 
 // CreateHistory
-func (m *Manager) CreateHistory(id int64, data []string) error {
+func (m *Manager) CreateHistory(id int64, msgs []string) error {
+	for i := len(msgs) - 1; i >= 0; i-- {
+		var msg Message
+		if err := json.Unmarshal([]byte(msgs[i]), &msg); err != nil {
+			return err
+		}
+		min := id
+		if min > msg.From {
+			min, msg.From = msg.From, min
+		}
+		if err := m.handler.LPush(context.Background(), m.getHistoryKey(min, msg.From), msgs[i]).Err(); err != nil {
+			return err
+		}
+	}
 	return nil
 }

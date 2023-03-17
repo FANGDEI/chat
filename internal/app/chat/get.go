@@ -27,6 +27,8 @@ func (m *Manager) Get(ctx context.Context, request *service.GetRequest) (*servic
 			return nil, errno.ServerErr(errno.ErrRewriteMsg, err.Error())
 		}
 	default:
+		// TODO: 解决用户连接异常断开后其他用户向其发送离线消息
+		// gateway依旧保持连接导致其依旧向chat模块获取消息而写入重复历史消息的问题
 		if err := m.cacher.CreateHistory(request.Id, msgs); err != nil {
 			return nil, errno.ServerErr(errno.ErrCreateHistory, err.Error())
 		}
