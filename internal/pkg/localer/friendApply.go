@@ -27,3 +27,9 @@ func (m *Manager) GetApply(id int64) ([]FriendApply, error) {
 	err := m.handler.Table(friendApply).Where("user_id = ?", id).Find(&fs).Error
 	return fs, err
 }
+
+func (m *Manager) ExistApply(id int64) bool {
+	var userID int64
+	err := m.handler.Table(friendApply).Where("user_id = ?", id).Take(&userID).Error
+	return err == nil && userID != 0
+}
