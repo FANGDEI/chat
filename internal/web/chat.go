@@ -2,6 +2,7 @@ package web
 
 import (
 	"chat/internal/app/service"
+	"chat/internal/pkg/cacher"
 	"context"
 	"encoding/json"
 	"log"
@@ -29,6 +30,10 @@ func (m *Manager) RouteChat() {
 // 	ContentType int64  `json:"content_type"`
 // 	Time        string `json:"time"`
 // }
+
+var (
+	redis = cacher.GetDefaultCacherManager()
+)
 
 type Client struct {
 	UserID int64
@@ -97,8 +102,12 @@ func (c *Client) Write() {
 		}
 		// 将消息 json 串发送给前端解析
 		for _, msg := range response.Msg {
-			err := c.Conn.WriteMessage(websocket.TextMessage, []byte(msg))
-			log.Println(err)
+			if err := c.Conn.WriteMessage(websocket.TextMessage, []byte(msg)); err != nil {
+				reErr := redis.Rewrite(c.UserID, response.Msg) // conn closed, rewrite msgs to redis
+				if reErr != nil {
+					defaultLogger.Error(err.Error())
+				}
+			}
 		}
 	}
 }
