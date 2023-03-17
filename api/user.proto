@@ -60,7 +60,7 @@ message GetUserListRequest {
 }
 
 message GetUserListResponse {
-  repeated SimpleUser friends = 1;
+  repeated SimpleUser list = 1;
 }
 
 message GetOtherUserInfoRequest {

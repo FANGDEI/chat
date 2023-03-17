@@ -53,7 +53,7 @@ func (m *Manager) GetUserInformationWithName(name string) (User, error) {
 
 func (m *Manager) GetUserListWithID(id int64) ([]SimpleUser, error) {
 	var us []SimpleUser
-	err := m.handler.Table(user).Raw("select u.id, u.uuid, u.name, u.nick_name, u.gender, u.avatar, u.email, u.signature from friend as f join user as u on f.friend_id = u.id where f.user_id = ?", id).Scan(&us).Error
+	err := m.handler.Raw("select u.id, u.name, u.nick_name, u.gender, u.avatar, u.email, u.signature from user as u join friend as f on f.friend_id = u.id where f.user_id = ?", id).Scan(&us).Error
 	return us, err
 }
 

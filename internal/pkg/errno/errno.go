@@ -20,16 +20,18 @@ var (
 	ErrEmailAuth   = &Errno{Code: 20103, Msg: "验证码错误"}
 
 	// User
-	ErrUserNameLength     = &Errno{Code: 20201, Msg: "用户名非法"}
-	ErrUserPasswordLength = &Errno{Code: 20202, Msg: "密码非法"}
-	ErrUserExists         = &Errno{Code: 20203, Msg: "用户已存在"}
-	ErrUserNotFound       = &Errno{Code: 20204, Msg: "用户不存在"}
-	ErrUserPassword       = &Errno{Code: 20205, Msg: "用户名或密码错误"}
-	ErrUserOldPassword    = &Errno{Code: 20206, Msg: "旧密码错误"}
+	ErrUserNameLength      = &Errno{Code: 20201, Msg: "用户名非法"}
+	ErrUserPasswordLength  = &Errno{Code: 20202, Msg: "密码非法"}
+	ErrUserExists          = &Errno{Code: 20203, Msg: "用户已存在"}
+	ErrUserNotFound        = &Errno{Code: 20204, Msg: "用户不存在"}
+	ErrUserPassword        = &Errno{Code: 20205, Msg: "用户名或密码错误"}
+	ErrUserOldPassword     = &Errno{Code: 20206, Msg: "旧密码错误"}
+	ErrUserFriendsNotFound = &Errno{Code: 20207, Msg: "未查询到用户好友"}
 
 	// Friend
-	ErrFriendExists    = &Errno{Code: 20301, Msg: "好友已存在"}
-	ErrFriendNotExists = &Errno{Code: 20302, Msg: "好友不存在"}
+	ErrFriendExists         = &Errno{Code: 20301, Msg: "好友已存在"}
+	ErrFriendNotExists      = &Errno{Code: 20302, Msg: "好友不存在"}
+	ErrFriendApplyNotExists = &Errno{Code: 20303, Msg: "好友申请不存在"}
 
 	// Chat
 	ErrGetUserMsg       = &Errno{Code: 20401, Msg: "消息获取失败"}

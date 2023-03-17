@@ -12,6 +12,7 @@ func (m *Manager) RouteUser() {
 		p.Get("/email/{email}", m.getEmail)
 		p.Get("/info", m.tokener.Serve(), m.getUserInfo)
 		p.Get("/info/{name}", m.tokener.Serve(), m.getOtherUserInfo)
+		p.Get("/friends", m.tokener.Serve(), m.friends)
 		p.Post("/register", m.register)
 		p.Post("/login", m.login)
 		p.Post("/update", m.tokener.Serve(), m.updateInfo)
@@ -170,4 +171,14 @@ func (m *Manager) changePwd(ctx iris.Context) {
 		return
 	}
 	m.sendSimpleMessage(ctx, iris.StatusOK)
+}
+
+func (m *Manager) friends(ctx iris.Context) {
+	id := m.tokener.GetID(ctx)
+	response, err := userClient.GetUserList(context.Background(), &service.GetUserListRequest{Id: id})
+	if err != nil {
+		m.sendErrorMessage(ctx, err)
+		return
+	}
+	m.sendGRPCMessage(ctx, iris.StatusOK, response, service.GetUserInfoResponse{})
 }
