@@ -57,11 +57,27 @@ func (m *Manager) CreateHistory(id int64, msgs []string) error {
 		if err := json.Unmarshal([]byte(msgs[i]), &msg); err != nil {
 			return err
 		}
-		min := id
-		if min > msg.From {
-			min, msg.From = msg.From, min
+		key := m.getHistoryKey(id, msg.From)
+		if err := m.handler.LPush(context.Background(), key, msgs[i]).Err(); err != nil {
+			return err
 		}
-		if err := m.handler.LPush(context.Background(), m.getHistoryKey(min, msg.From), msgs[i]).Err(); err != nil {
+	}
+	return nil
+}
+
+// RewriteAndPop Rewrite msgs to redis and Pop the history from redis
+func (m *Manager) RewriteAndPop(id int64, msgs []string) error {
+	key := m.getMsgReceiverKey(id)
+	for i := len(msgs) - 1; i >= 0; i-- {
+		if err := m.handler.RPush(context.Background(), key, msgs[i]).Err(); err != nil {
+			return err
+		}
+		var msg Message
+		err := json.Unmarshal([]byte(msgs[i]), &msg)
+		if err != nil {
+			return err
+		}
+		if err := m.handler.LPop(context.Background(), m.getHistoryKey(id, msg.From)).Err(); err != nil {
 			return err
 		}
 	}

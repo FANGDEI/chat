@@ -76,6 +76,7 @@ func (c *Client) Read() {
 		if _, err := chatClient.Send(context.Background(), &req); err != nil {
 			defaultLogger.Error(err.Error())
 			c.Conn.WriteMessage(websocket.TextMessage, []byte(err.Error()))
+			break
 		}
 	}
 }
@@ -103,10 +104,11 @@ func (c *Client) Write() {
 		// 将消息 json 串发送给前端解析
 		for _, msg := range response.Msg {
 			if err := c.Conn.WriteMessage(websocket.TextMessage, []byte(msg)); err != nil {
-				reErr := redis.Rewrite(c.UserID, response.Msg) // conn closed, rewrite msgs to redis
+				reErr := redis.RewriteAndPop(c.UserID, response.Msg) // conn closed, rewrite msgs to redis and pop the history
 				if reErr != nil {
 					defaultLogger.Error(err.Error())
 				}
+				return
 			}
 		}
 	}

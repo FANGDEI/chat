@@ -68,6 +68,9 @@ func (m *Manager) getMsgReceiverKey(id int64) string {
 }
 
 func (m *Manager) getHistoryKey(id, otherID int64) string {
+	if id > otherID {
+		id, otherID = otherID, id
+	}
 	return fmt.Sprintf(
 		"history:%d-%d", id, otherID,
 	)
