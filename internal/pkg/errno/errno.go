@@ -41,4 +41,9 @@ var (
 
 	// File
 	ErrUploadFile = &Errno{Code: 20501, Msg: "上传失败"}
+
+	// Group
+	ErrGroupExists   = &Errno{Code: 20601, Msg: "群聊已存在"}
+	ErrGroupRole     = &Errno{Code: 20602, Msg: "权限认证失败"}
+	ErrGroupNotFound = &Errno{Code: 20603, Msg: "群聊不存在"}
 )

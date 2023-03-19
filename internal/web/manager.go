@@ -2,6 +2,7 @@ package web
 
 import (
 	"chat/internal/pkg/auther"
+	"chat/internal/pkg/localer"
 	"chat/internal/pkg/logger"
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/kataras/iris/v12"
@@ -16,6 +17,7 @@ type Manager struct {
 	handler *iris.Application
 	logger  *logger.Manager
 	tokener *auther.Manager
+	localer *localer.Manager
 }
 
 func New() *Manager {
@@ -23,6 +25,7 @@ func New() *Manager {
 		handler: iris.Default(),
 		logger:  logger.GetDefaultLoggerManager(),
 		tokener: auther.GetDefaultTokenerManager(),
+		localer: localer.GetDefaultLocalerManager(),
 	}
 }
 

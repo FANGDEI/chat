@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+option go_package = "./internal/app/service;service";
+
+package service;
+
+import "api/common.proto";
+
+message CreateRequest {
+    int64 user_id = 1;
+    string group_name = 2;
+}
+
+message DeleteRequest {
+    int64 user_id = 1;
+    int64 group_id = 2;
+}
+
+message UpdateGroupAvatarRequest {
+    int64 user_id = 1;
+    int64 group_id = 2;
+    string avatar = 3;
+}
+
+message UpdateGroupNoticeRequest {
+    int64 user_id = 1;
+    int64 group_id = 2;
+    string notice = 3;
+}
+
+message AddGroupRequest {
+    int64 user_id = 1;
+    int64 group_id = 2;
+    string apply_msg = 3;
+}
+
+message ExitGroupRequest {
+    int64 user_id = 1;
+    int64 group_id = 2;
+}
+
+message AcceptApplyRequest {
+    int64 user_id = 1;
+    int64 group_id = 2;
+    bool accept = 3;
+}
+
+message GetGroupInfoRequest {
+    string group_name = 1;
+}
+
+message Group {
+    int64 id = 1;
+    int64 user_id = 2;
+    string name = 3;
+    string avatar = 4;
+    string notice = 5;
+}
+
+message GetGroupInfoResponse {
+    Group group = 1;
+}
+
+service GroupService {
+    rpc Create(CreateRequest) returns (Response) {}
+    rpc Delete(DeleteRequest) returns (Response) {}
+    rpc GetGroupInfo(GetGroupInfoRequest) returns (GetGroupInfoResponse) {}
+    rpc UpdateGroupAvatar(UpdateGroupAvatarRequest) returns (Response) {}
+    rpc UpdateGroupNotice(UpdateGroupNoticeRequest) returns (Response) {}
+    rpc AddGroup(AddGroupRequest) returns (Response) {}
+    rpc ExitGroup(ExitGroupRequest) returns (Response) {}
+    rpc AcceptApply(AcceptApplyRequest) returns (Response) {}
+}
