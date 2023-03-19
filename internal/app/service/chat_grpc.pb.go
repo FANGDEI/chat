@@ -20,7 +20,8 @@ const _ = grpc.SupportPackageIsVersion7
 type ChatServiceClient interface {
 	Send(ctx context.Context, in *SendRequest, opts ...grpc.CallOption) (*Response, error)
 	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
-	GetHistory(ctx context.Context, in *GetHistoryRequest, opts ...grpc.CallOption) (*GetHistoryResponse, error)
+	GetUserHistory(ctx context.Context, in *GetUserHistoryRequest, opts ...grpc.CallOption) (*GetUserHistoryResponse, error)
+	GetGroupHistory(ctx context.Context, in *GetGroupHistoryRequest, opts ...grpc.CallOption) (*GetGroupHistoryResponse, error)
 }
 
 type chatServiceClient struct {
@@ -49,9 +50,18 @@ func (c *chatServiceClient) Get(ctx context.Context, in *GetRequest, opts ...grp
 	return out, nil
 }
 
-func (c *chatServiceClient) GetHistory(ctx context.Context, in *GetHistoryRequest, opts ...grpc.CallOption) (*GetHistoryResponse, error) {
-	out := new(GetHistoryResponse)
-	err := c.cc.Invoke(ctx, "/service.ChatService/GetHistory", in, out, opts...)
+func (c *chatServiceClient) GetUserHistory(ctx context.Context, in *GetUserHistoryRequest, opts ...grpc.CallOption) (*GetUserHistoryResponse, error) {
+	out := new(GetUserHistoryResponse)
+	err := c.cc.Invoke(ctx, "/service.ChatService/GetUserHistory", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *chatServiceClient) GetGroupHistory(ctx context.Context, in *GetGroupHistoryRequest, opts ...grpc.CallOption) (*GetGroupHistoryResponse, error) {
+	out := new(GetGroupHistoryResponse)
+	err := c.cc.Invoke(ctx, "/service.ChatService/GetGroupHistory", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +74,8 @@ func (c *chatServiceClient) GetHistory(ctx context.Context, in *GetHistoryReques
 type ChatServiceServer interface {
 	Send(context.Context, *SendRequest) (*Response, error)
 	Get(context.Context, *GetRequest) (*GetResponse, error)
-	GetHistory(context.Context, *GetHistoryRequest) (*GetHistoryResponse, error)
+	GetUserHistory(context.Context, *GetUserHistoryRequest) (*GetUserHistoryResponse, error)
+	GetGroupHistory(context.Context, *GetGroupHistoryRequest) (*GetGroupHistoryResponse, error)
 	mustEmbedUnimplementedChatServiceServer()
 }
 
@@ -78,8 +89,11 @@ func (UnimplementedChatServiceServer) Send(context.Context, *SendRequest) (*Resp
 func (UnimplementedChatServiceServer) Get(context.Context, *GetRequest) (*GetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedChatServiceServer) GetHistory(context.Context, *GetHistoryRequest) (*GetHistoryResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetHistory not implemented")
+func (UnimplementedChatServiceServer) GetUserHistory(context.Context, *GetUserHistoryRequest) (*GetUserHistoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserHistory not implemented")
+}
+func (UnimplementedChatServiceServer) GetGroupHistory(context.Context, *GetGroupHistoryRequest) (*GetGroupHistoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGroupHistory not implemented")
 }
 func (UnimplementedChatServiceServer) mustEmbedUnimplementedChatServiceServer() {}
 
@@ -130,20 +144,38 @@ func _ChatService_Get_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ChatService_GetHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetHistoryRequest)
+func _ChatService_GetUserHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserHistoryRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServiceServer).GetHistory(ctx, in)
+		return srv.(ChatServiceServer).GetUserHistory(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/service.ChatService/GetHistory",
+		FullMethod: "/service.ChatService/GetUserHistory",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServiceServer).GetHistory(ctx, req.(*GetHistoryRequest))
+		return srv.(ChatServiceServer).GetUserHistory(ctx, req.(*GetUserHistoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ChatService_GetGroupHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGroupHistoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChatServiceServer).GetGroupHistory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/service.ChatService/GetGroupHistory",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChatServiceServer).GetGroupHistory(ctx, req.(*GetGroupHistoryRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -164,8 +196,12 @@ var ChatService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ChatService_Get_Handler,
 		},
 		{
-			MethodName: "GetHistory",
-			Handler:    _ChatService_GetHistory_Handler,
+			MethodName: "GetUserHistory",
+			Handler:    _ChatService_GetUserHistory_Handler,
+		},
+		{
+			MethodName: "GetGroupHistory",
+			Handler:    _ChatService_GetGroupHistory_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

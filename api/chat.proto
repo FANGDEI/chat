@@ -31,7 +31,7 @@ message GetResponse {
   repeated string msg = 1;
 }
 
-message GetHistoryRequest {
+message GetUserHistoryRequest {
   int64 offset = 1;
   int64 limit = 2;
   bool pagination = 3;
@@ -39,12 +39,24 @@ message GetHistoryRequest {
   int64 other_id = 5;
 }
 
-message GetHistoryResponse {
+message GetUserHistoryResponse {
+  repeated string list = 1;
+}
+
+message GetGroupHistoryRequest {
+  int64 offset = 1;
+  int64 limit = 2;
+  bool pagination = 3;
+  int64 group_id = 4;
+}
+
+message GetGroupHistoryResponse {
   repeated string list = 1;
 }
 
 service ChatService {
   rpc Send(SendRequest) returns (Response) {}
   rpc Get(GetRequest) returns (GetResponse) {}
-  rpc GetHistory(GetHistoryRequest) returns (GetHistoryResponse) {}
+  rpc GetUserHistory(GetUserHistoryRequest) returns (GetUserHistoryResponse) {}
+  rpc GetGroupHistory(GetGroupHistoryRequest) returns (GetGroupHistoryResponse) {}
 }

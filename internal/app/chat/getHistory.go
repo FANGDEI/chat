@@ -5,6 +5,6 @@ import (
 	"context"
 )
 
-func (m *Manager) GetHistory(ctx context.Context, request *service.GetHistoryRequest) (*service.GetHistoryResponse, error) {
+func (m *Manager) GetUserHistory(ctx context.Context, request *service.GetUserHistoryRequest) (*service.GetUserHistoryResponse, error) {
 	return nil, nil
 }
