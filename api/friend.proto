@@ -7,18 +7,18 @@ package service;
 import "api/common.proto";
 
 message AddFriendRequest {
-  int64 id = 1;
+  int64 user_id = 1;
   int64 friend_id = 2;
   string apply_msg = 3;
 }
 
 message DelFriendRequest {
-  int64 id = 1;
+  int64 user_id = 1;
   int64 friend_id = 2;
 }
 
 message AgreeApplyRequest {
-  int64 id = 1;
+  int64 user_id = 1;
   int64 friend_id = 2;
   bool agree = 3;
 }

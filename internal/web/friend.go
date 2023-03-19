@@ -22,14 +22,14 @@ type addFriendMessage struct {
 }
 
 func (m *Manager) addFriend(ctx iris.Context) {
-	id := m.tokener.GetID(ctx)
+	userID := m.tokener.GetID(ctx)
 	var msg addFriendMessage
 	if err := ctx.ReadJSON(&msg); err != nil {
 		m.sendSimpleMessage(ctx, iris.StatusBadRequest, err)
 		return
 	}
 	_, err := friendClient.AddFriend(context.Background(), &service.AddFriendRequest{
-		Id:       id,
+		UserId:   userID,
 		FriendId: msg.FriendID,
 		ApplyMsg: msg.ApplyMsg,
 	})
@@ -51,7 +51,7 @@ func (m *Manager) delFriend(ctx iris.Context) {
 		return
 	}
 	_, err := friendClient.DelFriend(context.Background(), &service.DelFriendRequest{
-		Id:       m.tokener.GetID(ctx),
+		UserId:   m.tokener.GetID(ctx),
 		FriendId: msg.FriendID,
 	})
 	if err != nil {
@@ -73,7 +73,7 @@ func (m *Manager) agree(ctx iris.Context) {
 		return
 	}
 	_, err := friendClient.AgreeApply(context.Background(), &service.AgreeApplyRequest{
-		Id:       m.tokener.GetID(ctx),
+		UserId:   m.tokener.GetID(ctx),
 		FriendId: msg.FriendID,
 		Agree:    msg.Agree,
 	})

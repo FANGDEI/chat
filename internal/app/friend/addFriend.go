@@ -12,13 +12,13 @@ import (
 
 func (m *Manager) AddFriend(ctx context.Context, request *service.AddFriendRequest) (*service.Response, error) {
 	m.logger.Info("Friend Service, AddFriend Service")
-	id, friendID := request.Id, request.FriendId
+	UserID, friendID := request.UserId, request.FriendId
 	// 判断是否已经是好友
-	if exists := m.localer.IsFriend(id, friendID); exists {
+	if exists := m.localer.IsFriend(UserID, friendID); exists {
 		return nil, errno.ServerErr(errno.ErrFriendExists, "friend already exists")
 	}
 	err := m.localer.CreateFriendApply(localer.FriendApply{
-		UserID:   id,
+		UserID:   UserID,
 		FriendID: friendID,
 		ApplyMsg: request.ApplyMsg,
 	})
@@ -26,7 +26,7 @@ func (m *Manager) AddFriend(ctx context.Context, request *service.AddFriendReque
 		return nil, errno.ServerErr(errno.ErrDuplicateRequest, err.Error())
 	}
 	err = m.cacher.Send(&cacher.Message{
-		From:        id,
+		From:        UserID,
 		To:          friendID,
 		Content:     request.ApplyMsg,
 		ContentType: constanter.FRIEND_REQUEST,
