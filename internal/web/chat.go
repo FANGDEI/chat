@@ -104,7 +104,7 @@ func (c *Client) Write() {
 		// 将消息 json 串发送给前端解析
 		for _, msg := range response.Msg {
 			if err := c.Conn.WriteMessage(websocket.TextMessage, []byte(msg)); err != nil {
-				reErr := redis.RewriteAndPop(c.UserID, response.Msg) // conn closed, rewrite msgs to redis and pop the history
+				reErr := redis.RewriteAndPop(c.UserID, response.Msg) // conn closed, rewrite msgs to redis and pop the message history
 				if reErr != nil {
 					defaultLogger.Error(err.Error())
 				}
