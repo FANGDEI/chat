@@ -1,5 +1,6 @@
 # chat
 使用Go基于WebSocket的IM系统
+
 ## 技术框架
 * web框架iris
 * ORM框架gorm
@@ -11,6 +12,7 @@
 * 日志框架Uber的zap
 * 服务注册与配置中心consul
 * 部署使用Makefile以及Dockerfile 
+
 ## 目录结构
 ```FILE
 .
