@@ -21,6 +21,7 @@ var defaultCacherManager *Manager
 type Message struct {
 	From        int64  `json:"from"`
 	To          int64  `json:"to"`
+	GroupID     int64  `json:"group_id,omitempty"`
 	Content     string `json:"content"`
 	Time        string `json:"time"`
 	ContentType int64  `json:"content_type"`

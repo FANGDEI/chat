@@ -13,6 +13,9 @@ func (m *Manager) RouteGroup() {
 		p.Post("/create", m.createGroup)
 		p.Post("/info", m.getGroupInfo)
 		p.Post("/delete", m.deleteGroup)
+		p.Post("/add", m.addGroup)
+		p.Post("/exit", m.exitGroup)
+		p.Post("/accept", m.accept)
 		p.Post("/update/avatar", m.updateGroupAvatar)
 		p.Post("/update/notice", m.updateGroupNotice)
 	})
@@ -118,6 +121,74 @@ func (m *Manager) updateGroupNotice(ctx iris.Context) {
 		UserId:  m.tokener.GetID(ctx),
 		GroupId: msg.GroupID,
 		Notice:  msg.Notice,
+	})
+	if err != nil {
+		m.sendErrorMessage(ctx, err)
+		return
+	}
+	m.sendSimpleMessage(ctx, iris.StatusOK)
+}
+
+type addGroupMessage struct {
+	GroupID  int64  `json:"group_id"`
+	ApplyMsg string `json:"apply_msg"`
+}
+
+func (m *Manager) addGroup(ctx iris.Context) {
+	var msg addGroupMessage
+	if err := ctx.ReadJSON(&msg); err != nil {
+		m.sendSimpleMessage(ctx, iris.StatusBadRequest, err)
+		return
+	}
+	_, err := groupClient.AddGroup(context.Background(), &service.AddGroupRequest{
+		UserId:   m.tokener.GetID(ctx),
+		GroupId:  msg.GroupID,
+		ApplyMsg: msg.ApplyMsg,
+	})
+	if err != nil {
+		m.sendErrorMessage(ctx, err)
+		return
+	}
+	m.sendSimpleMessage(ctx, iris.StatusOK)
+}
+
+type acceptApplyMessage struct {
+	UserID  int64 `json:"user_id"`
+	GroupID int64 `json:"group_id"`
+	Accept  bool  `json:"accept"`
+}
+
+func (m *Manager) accept(ctx iris.Context) {
+	var msg acceptApplyMessage
+	if err := ctx.ReadJSON(&msg); err != nil {
+		m.sendSimpleMessage(ctx, iris.StatusBadRequest, err)
+		return
+	}
+	_, err := groupClient.AcceptApply(context.Background(), &service.AcceptApplyRequest{
+		UserId:  msg.UserID,
+		GroupId: msg.GroupID,
+		Accept:  msg.Accept,
+	})
+	if err != nil {
+		m.sendErrorMessage(ctx, err)
+		return
+	}
+	m.sendSimpleMessage(ctx, iris.StatusOK)
+}
+
+type exitGroupMessage struct {
+	GroupID int64 `json:"group_id"`
+}
+
+func (m *Manager) exitGroup(ctx iris.Context) {
+	var msg exitGroupMessage
+	if err := ctx.ReadJSON(&msg); err != nil {
+		m.sendSimpleMessage(ctx, iris.StatusBadRequest, err)
+		return
+	}
+	_, err := groupClient.ExitGroup(context.Background(), &service.ExitGroupRequest{
+		UserId:  m.tokener.GetID(ctx),
+		GroupId: msg.GroupID,
 	})
 	if err != nil {
 		m.sendErrorMessage(ctx, err)

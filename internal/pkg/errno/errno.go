@@ -43,7 +43,10 @@ var (
 	ErrUploadFile = &Errno{Code: 20501, Msg: "上传失败"}
 
 	// Group
-	ErrGroupExists   = &Errno{Code: 20601, Msg: "群聊已存在"}
-	ErrGroupRole     = &Errno{Code: 20602, Msg: "权限认证失败"}
-	ErrGroupNotFound = &Errno{Code: 20603, Msg: "群聊不存在"}
+	ErrGroupExists           = &Errno{Code: 20601, Msg: "群聊已存在"}
+	ErrGroupRole             = &Errno{Code: 20602, Msg: "权限认证失败"}
+	ErrGroupNotFound         = &Errno{Code: 20603, Msg: "群聊不存在"}
+	ErrGroupMemberAlready    = &Errno{Code: 20604, Msg: "已是群成员"}
+	ErrGroupDuplicateRequest = &Errno{Code: 20605, Msg: "重复请求, 请等待群主验证"}
+	ErrGroupMemberNot        = &Errno{Code: 20606, Msg: "不是群成员"}
 )
