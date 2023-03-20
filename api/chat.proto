@@ -9,9 +9,10 @@ import "api/common.proto";
 message SendRequest {
   int64 from = 1; // id
   int64 to = 2; // id
-  string content = 3;
-  int64 message_type = 4;
-  int64 content_type = 5;
+  int64 group_id = 3;
+  string content = 4;
+  int64 message_type = 5;
+  int64 content_type = 6;
 }
 
 message GetRequest {

@@ -13,6 +13,7 @@ func (m *Manager) Send(ctx context.Context, request *service.SendRequest) (*serv
 	data := &cacher.Message{
 		From:        request.From,
 		To:          request.To,
+		GroupID:     request.GroupId,
 		Content:     request.Content,
 		ContentType: request.ContentType,
 		MessageType: request.MessageType,
