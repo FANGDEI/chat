@@ -1,6 +1,7 @@
 package cacher
 
 import (
+	"chat/internal/pkg/constanter"
 	"context"
 	"encoding/json"
 	"time"
@@ -56,6 +57,10 @@ func (m *Manager) CreateHistory(id int64, msgs []string) error {
 		var msg Message
 		if err := json.Unmarshal([]byte(msgs[i]), &msg); err != nil {
 			return err
+		}
+		// 好友申请以及入群申请不存入聊天记录
+		if msg.ContentType == constanter.FRIEND_REQUEST || msg.ContentType == constanter.GROUP_REQUEST {
+			continue
 		}
 		key := m.getHistoryKey(id, msg.From)
 		if err := m.handler.LPush(context.Background(), key, msgs[i]).Err(); err != nil {
