@@ -26,6 +26,7 @@ type UserServiceClient interface {
 	UpdateUserInfo(ctx context.Context, in *UpdateUserInfoRequest, opts ...grpc.CallOption) (*Response, error)
 	GetUserList(ctx context.Context, in *GetUserListRequest, opts ...grpc.CallOption) (*GetUserListResponse, error)
 	GetOtherUserInfo(ctx context.Context, in *GetOtherUserInfoRequest, opts ...grpc.CallOption) (*GetOtherUserInfoResponse, error)
+	GetUserGroupList(ctx context.Context, in *GetUserGroupListRequest, opts ...grpc.CallOption) (*GetUserGroupListResponse, error)
 }
 
 type userServiceClient struct {
@@ -108,6 +109,15 @@ func (c *userServiceClient) GetOtherUserInfo(ctx context.Context, in *GetOtherUs
 	return out, nil
 }
 
+func (c *userServiceClient) GetUserGroupList(ctx context.Context, in *GetUserGroupListRequest, opts ...grpc.CallOption) (*GetUserGroupListResponse, error) {
+	out := new(GetUserGroupListResponse)
+	err := c.cc.Invoke(ctx, "/service.UserService/GetUserGroupList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -120,6 +130,7 @@ type UserServiceServer interface {
 	UpdateUserInfo(context.Context, *UpdateUserInfoRequest) (*Response, error)
 	GetUserList(context.Context, *GetUserListRequest) (*GetUserListResponse, error)
 	GetOtherUserInfo(context.Context, *GetOtherUserInfoRequest) (*GetOtherUserInfoResponse, error)
+	GetUserGroupList(context.Context, *GetUserGroupListRequest) (*GetUserGroupListResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -150,6 +161,9 @@ func (UnimplementedUserServiceServer) GetUserList(context.Context, *GetUserListR
 }
 func (UnimplementedUserServiceServer) GetOtherUserInfo(context.Context, *GetOtherUserInfoRequest) (*GetOtherUserInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOtherUserInfo not implemented")
+}
+func (UnimplementedUserServiceServer) GetUserGroupList(context.Context, *GetUserGroupListRequest) (*GetUserGroupListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserGroupList not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -308,6 +322,24 @@ func _UserService_GetOtherUserInfo_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetUserGroupList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserGroupListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetUserGroupList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/service.UserService/GetUserGroupList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetUserGroupList(ctx, req.(*GetUserGroupListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -346,6 +378,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetOtherUserInfo",
 			Handler:    _UserService_GetOtherUserInfo_Handler,
+		},
+		{
+			MethodName: "GetUserGroupList",
+			Handler:    _UserService_GetUserGroupList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -5,6 +5,7 @@ option go_package = "./internal/app/service;service";
 package service;
 
 import "api/common.proto";
+import "api/group.proto";
 
 message CodeRequest {
   string email = 1;
@@ -71,6 +72,14 @@ message GetOtherUserInfoResponse {
   SimpleUser user = 1;
 }
 
+message GetUserGroupListRequest {
+  int64 id = 1;
+}
+
+message GetUserGroupListResponse {
+  repeated Group list = 1;
+}
+
 service UserService {
   rpc Code(CodeRequest) returns (Response) {}
   rpc Register(UserRegisterRequest) returns (Response) {}
@@ -80,4 +89,5 @@ service UserService {
   rpc UpdateUserInfo(UpdateUserInfoRequest) returns (Response) {}
   rpc GetUserList(GetUserListRequest) returns (GetUserListResponse) {}
   rpc GetOtherUserInfo(GetOtherUserInfoRequest) returns (GetOtherUserInfoResponse) {}
+  rpc GetUserGroupList(GetUserGroupListRequest) returns (GetUserGroupListResponse) {}
 }

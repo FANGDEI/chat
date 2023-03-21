@@ -13,6 +13,7 @@ func (m *Manager) RouteUser() {
 		p.Get("/info", m.tokener.Serve(), m.getUserInfo)
 		p.Get("/info/{name}", m.tokener.Serve(), m.getOtherUserInfo)
 		p.Get("/friends", m.tokener.Serve(), m.friends)
+		p.Get("/groups", m.tokener.Serve(), m.groups)
 		p.Post("/register", m.register)
 		p.Post("/login", m.login)
 		p.Post("/update", m.tokener.Serve(), m.updateInfo)
@@ -181,4 +182,15 @@ func (m *Manager) friends(ctx iris.Context) {
 		return
 	}
 	m.sendGRPCMessage(ctx, iris.StatusOK, response, service.GetUserInfoResponse{})
+}
+
+func (m *Manager) groups(ctx iris.Context) {
+	response, err := userClient.GetUserGroupList(context.Background(), &service.GetUserGroupListRequest{
+		Id: m.tokener.GetID(ctx),
+	})
+	if err != nil {
+		m.sendErrorMessage(ctx, err)
+		return
+	}
+	m.sendGRPCMessage(ctx, iris.StatusOK, response, service.GetUserGroupListResponse{})
 }

@@ -69,6 +69,12 @@ func (m *Manager) DeleteUserWithID(id int64) error {
 	return m.handler.Table(user).Where("id = ?", id).Delete(&User{}).Error
 }
 
+func (m *Manager) GetUserGroupListWithID(id int64) ([]Group, error) {
+	var list []Group
+	err := m.handler.Raw("select g.id, g.user_id, g.name, g.avatar, g.notice from `group` as g join group_member as gm on g.id = gm.group_id where gm.user_id = ?", id).Scan(&list).Error
+	return list, err
+}
+
 //func (m *Manager) GetUserInfoWithUuid(uuid string) (SimpleUser, error) {
 //	var u SimpleUser
 //	err := m.handler.Table(user).Where("uuid = ?", uuid).Take(&u).Error
