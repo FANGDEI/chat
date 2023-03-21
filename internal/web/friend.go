@@ -10,6 +10,7 @@ import (
 func (m *Manager) RouteFriend() {
 	m.handler.PartyFunc("/friend", func(p iris.Party) {
 		p.Use(m.tokener.Serve())
+		p.Get("/list", m.applyList)
 		p.Post("/add", m.addFriend)
 		p.Post("/del", m.delFriend)
 		p.Post("/agree", m.agree)
@@ -82,4 +83,15 @@ func (m *Manager) agree(ctx iris.Context) {
 		return
 	}
 	m.sendSimpleMessage(ctx, iris.StatusOK)
+}
+
+func (m *Manager) applyList(ctx iris.Context) {
+	response, err := friendClient.GetFriendApply(context.Background(), &service.GetFriendApplyRequest{
+		UserId: m.tokener.GetID(ctx),
+	})
+	if err != nil {
+		m.sendErrorMessage(ctx, err)
+		return
+	}
+	m.sendGRPCMessage(ctx, iris.StatusOK, response, service.GetFriendApplyResponse{})
 }

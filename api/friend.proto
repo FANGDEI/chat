@@ -23,8 +23,24 @@ message AgreeApplyRequest {
   bool agree = 3;
 }
 
+message FriendApply {
+  int64 id = 1;
+  int64 user_id = 2;
+  int64 friend_id = 3;
+  string apply_msg = 4;
+}
+
+message GetFriendApplyRequest {
+  int64 user_id = 1;
+}
+
+message GetFriendApplyResponse {
+  repeated FriendApply list = 1;
+}
+
 service FriendService {
   rpc AddFriend(AddFriendRequest) returns (Response) {}
   rpc DelFriend(DelFriendRequest) returns (Response) {}
   rpc AgreeApply(AgreeApplyRequest) returns (Response) {}
+  rpc GetFriendApply(GetFriendApplyRequest) returns (GetFriendApplyResponse) {}
 }
