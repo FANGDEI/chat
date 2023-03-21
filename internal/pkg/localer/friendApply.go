@@ -22,14 +22,14 @@ func (m *Manager) DeleteApply(userID, friendID int64) error {
 	return m.handler.Table(friendApply).Where("user_id = ? AND friend_id = ?", userID, friendID).Delete(&FriendApply{}).Error
 }
 
-func (m *Manager) GetApply(id int64) ([]FriendApply, error) {
+func (m *Manager) GetFriendApplyWithID(id int64) ([]FriendApply, error) {
 	var fs []FriendApply
 	err := m.handler.Table(friendApply).Where("user_id = ?", id).Find(&fs).Error
 	return fs, err
 }
 
-func (m *Manager) ExistApply(id int64) bool {
-	var userID int64
-	err := m.handler.Table(friendApply).Where("user_id = ?", id).Take(&userID).Error
-	return err == nil && userID != 0
+func (m *Manager) ExistApply(userID, friendID int64) bool {
+	var id int64
+	err := m.handler.Table(friendApply).Select("id").Where("user_id = ? AND friend_id = ?", userID, friendID).Take(&id).Error
+	return err == nil && id != 0
 }

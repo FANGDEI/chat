@@ -9,7 +9,7 @@ import (
 func (m *Manager) AgreeApply(ctx context.Context, request *service.AgreeApplyRequest) (*service.Response, error) {
 	m.logger.Info("Friend service, AcceptFriend service")
 	UserID, friendID, agree := request.UserId, request.FriendId, request.Agree
-	if exists := m.localer.ExistApply(UserID); !exists {
+	if exists := m.localer.ExistApply(UserID, friendID); !exists {
 		return nil, errno.ServerErr(errno.ErrFriendApplyNotExists, "apply not exists")
 	}
 	if agree {
