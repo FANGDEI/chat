@@ -19,6 +19,7 @@ func (m *Manager) RouteChat() {
 		p.Use(m.tokener.Serve())
 		p.Get("/ws", m.ws)
 		p.Get("/ws/test", m.wsTest)
+		p.Post("/user/history", m.getUserHistory)
 	})
 }
 
@@ -138,6 +139,33 @@ func (m *Manager) ws(ctx iris.Context) {
 	MyHub.Register <- client
 	go client.Read()
 	go client.Write()
+}
+
+type getUserHistoryMessage struct {
+	OtherID    int64 `json:"other_id"`
+	Offset     int64 `json:"offset"`
+	Limit      int64 `json:"limit"`
+	Pagination bool  `json:"pagination"`
+}
+
+func (m *Manager) getUserHistory(ctx iris.Context) {
+	var msg getUserHistoryMessage
+	if err := ctx.ReadJSON(&msg); err != nil {
+		m.sendSimpleMessage(ctx, iris.StatusBadRequest, err)
+		return
+	}
+	response, err := chatClient.GetUserHistory(context.Background(), &service.GetUserHistoryRequest{
+		UserId:     m.tokener.GetID(ctx),
+		OtherId:    msg.OtherID,
+		Offset:     msg.Offset,
+		Limit:      msg.Limit,
+		Pagination: msg.Pagination,
+	})
+	if err != nil {
+		m.sendErrorMessage(ctx, err)
+		return
+	}
+	m.sendGRPCMessage(ctx, iris.StatusOK, response, service.GetUserHistoryResponse{})
 }
 
 func (m *Manager) wsTest(ctx iris.Context) {

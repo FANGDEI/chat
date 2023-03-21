@@ -51,6 +51,25 @@ func (m *Manager) Rewrite(id int64, msgs []string) error {
 	return nil
 }
 
+// RewriteAndPop Rewrite msgs to redis and Pop the history from redis
+func (m *Manager) RewriteAndPop(id int64, msgs []string) error {
+	key := m.getMsgReceiverKey(id)
+	for i := len(msgs) - 1; i >= 0; i-- {
+		if err := m.handler.RPush(context.Background(), key, msgs[i]).Err(); err != nil {
+			return err
+		}
+		var msg Message
+		err := json.Unmarshal([]byte(msgs[i]), &msg)
+		if err != nil {
+			return err
+		}
+		if err := m.handler.LPop(context.Background(), m.getHistoryKey(id, msg.From)).Err(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // CreateHistory
 func (m *Manager) CreateHistory(id int64, msgs []string) error {
 	for i := len(msgs) - 1; i >= 0; i-- {
@@ -78,21 +97,15 @@ func (m *Manager) CreateHistory(id int64, msgs []string) error {
 	return nil
 }
 
-// RewriteAndPop Rewrite msgs to redis and Pop the history from redis
-func (m *Manager) RewriteAndPop(id int64, msgs []string) error {
-	key := m.getMsgReceiverKey(id)
-	for i := len(msgs) - 1; i >= 0; i-- {
-		if err := m.handler.RPush(context.Background(), key, msgs[i]).Err(); err != nil {
-			return err
-		}
-		var msg Message
-		err := json.Unmarshal([]byte(msgs[i]), &msg)
-		if err != nil {
-			return err
-		}
-		if err := m.handler.LPop(context.Background(), m.getHistoryKey(id, msg.From)).Err(); err != nil {
-			return err
-		}
+func (m *Manager) GetUserHistory(userID, otherID, offset, limit int64, pagination bool) ([]string, error) {
+	key := m.getHistoryKey(userID, otherID)
+	var start, end int64 = 0, -1
+	if pagination {
+		start, end = offset, offset+limit
 	}
-	return nil
+	list, err := m.handler.LRange(context.Background(), key, start, end).Result()
+	if err != nil {
+		return nil, err
+	}
+	return list, err
 }
