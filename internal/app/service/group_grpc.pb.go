@@ -26,6 +26,7 @@ type GroupServiceClient interface {
 	AddGroup(ctx context.Context, in *AddGroupRequest, opts ...grpc.CallOption) (*Response, error)
 	ExitGroup(ctx context.Context, in *ExitGroupRequest, opts ...grpc.CallOption) (*Response, error)
 	AcceptApply(ctx context.Context, in *AcceptApplyRequest, opts ...grpc.CallOption) (*Response, error)
+	GetGroupApply(ctx context.Context, in *GetGroupApplyRequest, opts ...grpc.CallOption) (*GetGroupApplyResponse, error)
 }
 
 type groupServiceClient struct {
@@ -108,6 +109,15 @@ func (c *groupServiceClient) AcceptApply(ctx context.Context, in *AcceptApplyReq
 	return out, nil
 }
 
+func (c *groupServiceClient) GetGroupApply(ctx context.Context, in *GetGroupApplyRequest, opts ...grpc.CallOption) (*GetGroupApplyResponse, error) {
+	out := new(GetGroupApplyResponse)
+	err := c.cc.Invoke(ctx, "/service.GroupService/GetGroupApply", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GroupServiceServer is the server API for GroupService service.
 // All implementations must embed UnimplementedGroupServiceServer
 // for forward compatibility
@@ -120,6 +130,7 @@ type GroupServiceServer interface {
 	AddGroup(context.Context, *AddGroupRequest) (*Response, error)
 	ExitGroup(context.Context, *ExitGroupRequest) (*Response, error)
 	AcceptApply(context.Context, *AcceptApplyRequest) (*Response, error)
+	GetGroupApply(context.Context, *GetGroupApplyRequest) (*GetGroupApplyResponse, error)
 	mustEmbedUnimplementedGroupServiceServer()
 }
 
@@ -150,6 +161,9 @@ func (UnimplementedGroupServiceServer) ExitGroup(context.Context, *ExitGroupRequ
 }
 func (UnimplementedGroupServiceServer) AcceptApply(context.Context, *AcceptApplyRequest) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AcceptApply not implemented")
+}
+func (UnimplementedGroupServiceServer) GetGroupApply(context.Context, *GetGroupApplyRequest) (*GetGroupApplyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGroupApply not implemented")
 }
 func (UnimplementedGroupServiceServer) mustEmbedUnimplementedGroupServiceServer() {}
 
@@ -308,6 +322,24 @@ func _GroupService_AcceptApply_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GroupService_GetGroupApply_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGroupApplyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GroupServiceServer).GetGroupApply(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/service.GroupService/GetGroupApply",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GroupServiceServer).GetGroupApply(ctx, req.(*GetGroupApplyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GroupService_ServiceDesc is the grpc.ServiceDesc for GroupService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -346,6 +378,10 @@ var GroupService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AcceptApply",
 			Handler:    _GroupService_AcceptApply_Handler,
+		},
+		{
+			MethodName: "GetGroupApply",
+			Handler:    _GroupService_GetGroupApply_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

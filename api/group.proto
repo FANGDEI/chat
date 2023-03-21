@@ -61,6 +61,22 @@ message GetGroupInfoResponse {
     Group group = 1;
 }
 
+message GroupApply {
+    int64 id = 1;
+    int64 user_id = 2;
+    int64 apply_id = 3;
+    int64 group_id = 4;
+    string apply_msg = 5;
+}
+
+message GetGroupApplyRequest {
+    int64 user_id = 1;
+}
+
+message GetGroupApplyResponse {
+    repeated GroupApply list = 1;
+}
+
 service GroupService {
     rpc Create(CreateRequest) returns (Response) {}
     rpc Delete(DeleteRequest) returns (Response) {}
@@ -70,4 +86,5 @@ service GroupService {
     rpc AddGroup(AddGroupRequest) returns (Response) {}
     rpc ExitGroup(ExitGroupRequest) returns (Response) {}
     rpc AcceptApply(AcceptApplyRequest) returns (Response) {}
+    rpc GetGroupApply(GetGroupApplyRequest) returns (GetGroupApplyResponse) {}
 }

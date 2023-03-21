@@ -10,6 +10,7 @@ import (
 func (m *Manager) RouteGroup() {
 	m.handler.PartyFunc("/group", func(p iris.Party) {
 		p.Use(m.tokener.Serve())
+		p.Get("/list", m.groupApplyList)
 		p.Post("/create", m.createGroup)
 		p.Post("/info", m.getGroupInfo)
 		p.Post("/delete", m.deleteGroup)
@@ -195,4 +196,15 @@ func (m *Manager) exitGroup(ctx iris.Context) {
 		return
 	}
 	m.sendSimpleMessage(ctx, iris.StatusOK)
+}
+
+func (m *Manager) groupApplyList(ctx iris.Context) {
+	response, err := groupClient.GetGroupApply(context.Background(), &service.GetGroupApplyRequest{
+		UserId: m.tokener.GetID(ctx),
+	})
+	if err != nil {
+		m.sendErrorMessage(ctx, err)
+		return
+	}
+	m.sendGRPCMessage(ctx, iris.StatusOK, response, service.GetGroupApplyResponse{})
 }

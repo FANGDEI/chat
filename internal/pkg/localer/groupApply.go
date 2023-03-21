@@ -21,3 +21,9 @@ func (m *Manager) DeleteGroupApply(applyID, groupID int64) error {
 func (m *Manager) DeleteGroupApplyWithGroupID(groupID int64) error {
 	return m.handler.Table(groupApply).Where("group_id = ?", groupID).Delete(&GroupApply{}).Error
 }
+
+func (m *Manager) GetGroupApplyWithUserID(userID int64) ([]GroupApply, error) {
+	var gs []GroupApply
+	err := m.handler.Table(groupApply).Where("user_id = ?", userID).Find(&gs).Error
+	return gs, err
+}
