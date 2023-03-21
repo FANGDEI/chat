@@ -25,3 +25,9 @@ func (m *Manager) IsMember(userID, groupID int64) bool {
 func (m *Manager) DeleteGroupMemberWithUserIDAndGroupID(userID, groupID int64) error {
 	return m.handler.Table(groupMember).Where("user_id = ? AND group_id = ?", userID, groupID).Delete(&GroupMember{}).Error
 }
+
+func (m *Manager) GetGroupMembersIDWithGroupID(groupID int64) ([]int64, error) {
+	var list []int64
+	err := m.handler.Table(groupMember).Select("user_id").Where("group_id = ?", groupID).Find(&list).Error
+	return list, err
+}

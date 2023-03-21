@@ -14,3 +14,7 @@ func TestGetUserGroupList(t *testing.T) {
 	list, _ := defaultLocalerManager.GetUserGroupListWithID(4)
 	t.Log(list)
 }
+
+func TestGetGroupMembersIDWithGroupID(t *testing.T) {
+	t.Log(defaultLocalerManager.GetGroupMembersIDWithGroupID(3))
+}

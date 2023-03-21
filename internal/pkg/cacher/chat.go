@@ -62,6 +62,14 @@ func (m *Manager) CreateHistory(id int64, msgs []string) error {
 		if msg.ContentType == constanter.FRIEND_REQUEST || msg.ContentType == constanter.GROUP_REQUEST {
 			continue
 		}
+		// 群聊消息记录
+		if msg.MessageType == constanter.MESSAGE_TYPE_GROUP {
+			key := m.getGroupHistoryKey(msg.GroupID)
+			if err := m.handler.LPush(context.Background(), key, msgs[i]).Err(); err != nil {
+				return err
+			}
+			continue
+		}
 		key := m.getHistoryKey(id, msg.From)
 		if err := m.handler.LPush(context.Background(), key, msgs[i]).Err(); err != nil {
 			return err

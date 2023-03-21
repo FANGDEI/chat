@@ -76,3 +76,9 @@ func (m *Manager) getHistoryKey(id, otherID int64) string {
 		"history:%d-%d", id, otherID,
 	)
 }
+
+func (m *Manager) getGroupHistoryKey(id int64) string {
+	return fmt.Sprintf(
+		"history:group:%d", id,
+	)
+}
