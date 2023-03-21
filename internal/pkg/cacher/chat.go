@@ -109,3 +109,16 @@ func (m *Manager) GetUserHistory(userID, otherID, offset, limit int64, paginatio
 	}
 	return list, err
 }
+
+func (m *Manager) GetGroupHistory(groupID, offset, limit int64, pagination bool) ([]string, error) {
+	key := m.getGroupHistoryKey(groupID)
+	var start, end int64 = 0, -1
+	if pagination {
+		start, end = offset, offset+limit
+	}
+	list, err := m.handler.LRange(context.Background(), key, start, end).Result()
+	if err != nil {
+		return nil, err
+	}
+	return list, err
+}

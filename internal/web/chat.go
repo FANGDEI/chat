@@ -20,6 +20,7 @@ func (m *Manager) RouteChat() {
 		p.Get("/ws", m.ws)
 		p.Get("/ws/test", m.wsTest)
 		p.Post("/user/history", m.getUserHistory)
+		p.Post("/group/history", m.getGroupHistory)
 	})
 }
 
@@ -166,6 +167,32 @@ func (m *Manager) getUserHistory(ctx iris.Context) {
 		return
 	}
 	m.sendGRPCMessage(ctx, iris.StatusOK, response, service.GetUserHistoryResponse{})
+}
+
+type getGroupHistoryMessage struct {
+	GroupID    int64 `json:"group_id"`
+	Offset     int64 `json:"offset"`
+	Limit      int64 `json:"limit"`
+	Pagination bool  `json:"pagination"`
+}
+
+func (m *Manager) getGroupHistory(ctx iris.Context) {
+	var msg getGroupHistoryMessage
+	if err := ctx.ReadJSON(&msg); err != nil {
+		m.sendSimpleMessage(ctx, iris.StatusBadRequest, err)
+		return
+	}
+	response, err := chatClient.GetGroupHistory(context.Background(), &service.GetGroupHistoryRequest{
+		GroupId:    msg.GroupID,
+		Offset:     msg.Offset,
+		Limit:      msg.Limit,
+		Pagination: msg.Pagination,
+	})
+	if err != nil {
+		m.sendErrorMessage(ctx, err)
+		return
+	}
+	m.sendGRPCMessage(ctx, iris.StatusOK, response, service.GetGroupHistoryResponse{})
 }
 
 func (m *Manager) wsTest(ctx iris.Context) {
