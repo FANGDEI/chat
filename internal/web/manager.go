@@ -4,11 +4,12 @@ import (
 	"chat/internal/pkg/auther"
 	"chat/internal/pkg/localer"
 	"chat/internal/pkg/logger"
-	"github.com/iris-contrib/middleware/cors"
-	"github.com/kataras/iris/v12"
 	"log"
 	"reflect"
 	"strings"
+
+	"github.com/iris-contrib/middleware/cors"
+	"github.com/kataras/iris/v12"
 )
 
 var defaultLogger = logger.GetDefaultLoggerManager()
@@ -22,7 +23,7 @@ type Manager struct {
 
 func New() *Manager {
 	return &Manager{
-		handler: iris.Default(),
+		handler: iris.New(),
 		logger:  logger.GetDefaultLoggerManager(),
 		tokener: auther.GetDefaultTokenerManager(),
 		localer: localer.GetDefaultLocalerManager(),
